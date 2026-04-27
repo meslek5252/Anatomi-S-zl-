@@ -1,0 +1,164 @@
+/* index.css */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Sayfa Açılış Animasyonu (Fade-In) */
+@keyframes fadeInPage {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  /* Arka plan resmi ayarları */
+  background-image: url('https://i.hizliresim.com/1vjg1ir.png') !important;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* Arka plan sabit kalsın */
+  background-repeat: no-repeat;
+  font-family: 'Inter', sans-serif;
+  color: #1f2937;
+  overflow-x: hidden;
+}
+
+/* Tüm Sayfayı Kaplayan ve Ortalayan Kapsayıcı */
+.main-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  animation: fadeInPage 0.8s ease-out; /* Açılış animasyonunu uygula */
+}
+
+/* İçerik Kısmı (Harfler ve Kelimeler) */
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  padding-bottom: 8rem; /* Footer'a yer açmak için */
+}
+
+/* Şeffaf Profesyonel Kart Yapısı */
+.glass-box {
+  background: rgba(255, 255, 255, 0.5) !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  border-radius: 2.5rem !important;
+  padding: 2.5rem !important;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1) !important;
+  width: 95%;
+  max-width: 900px;
+}
+
+/* Harf Butonları ve Hover Animasyonu */
+.letter-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease-out; /* Animasyon hızı */
+  font-size: 14px;
+  margin: 4px;
+}
+
+.letter-btn:hover {
+  transform: translateY(-5px) scale(1.1); /* Yukarı doğru zıpla ve büyü */
+  box-shadow: 0 5px 15px rgba(2, 132, 199, 0.3); /* Mavi gölge ekle */
+}
+
+/* Aktif Harf Butonu */
+.active-letter {
+  background: #0284c7 !important; /* Sky-600 */
+  color: white !important;
+  transform: scale(1.15);
+  box-shadow: 0 5px 15px rgba(2, 132, 199, 0.4) !important;
+}
+
+/* Kelime Kartları ve Hover Animasyonu */
+.term-link {
+  background: rgba(255, 255, 255, 0.8) !important;
+  padding: 25px !important;
+  border-radius: 20px !important;
+  text-align: center !important;
+  text-decoration: none !important;
+  color: #1f2937 !important;
+  font-weight: bold !important;
+  font-size: 15px !important;
+  transition: all 0.3s ease; /* Animasyon hızı */
+  border: 1px solid rgba(255,255,255,0.3) !important;
+}
+
+.term-link:hover {
+  background: white !important;
+  transform: translateY(-8px) rotate(2deg); /* Yukarı zıpla ve hafifçe dön */
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+/* EN ALTTAKİ ADRES VE BUTON KISMI (FOOTER) - JİLET GİBİ ORTALI */
+.site-footer {
+  width: 100%;
+  padding: 1.5rem 0;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255,255,255,0.4);
+  position: relative; /* Fixed'den çıkardım, flex-col içinde kalsın */
+  display: flex;
+  justify-content: center; /* Yatayda ortala */
+  align-items: center; /* Dikeyde ortala */
+}
+
+/* Adres ve Butonları İçeren Kapsayıcı */
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* İçindekileri ortala */
+  gap: 15px; /* Adres ve butonlar arasındaki boşluk */
+  max-width: 800px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Adres Metni */
+.address-text {
+  font-size: 14px;
+  color: #4b5563;
+  margin: 0;
+}
+
+/* Kelime Ekle/Sil Butonlarının Olduğu Kısım */
+.action-buttons {
+  display: flex;
+  gap: 10px; /* Butonlar arasındaki boşluk */
+}
+
+/* Ortak Buton Stili */
+.action-btn {
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 13px;
+}
+
+.add-btn {
+  background: #10b981; /* Green-500 */
+  color: white;
+}
+
+.add-btn:hover { background: #059669; transform: scale(1.05); }
+
+.delete-btn {
+  background: #ef4444; /* Red-500 */
+  color: white;
+}
+
+.delete-btn:hover { background: #dc2626; transform: scale(1.05); }
