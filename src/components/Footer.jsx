@@ -9,13 +9,20 @@ export default function Footer() {
     const password = prompt("Yönetici şifresi:");
     
     if (password && password.trim() === ADMIN_PASSWORD) {
-      if (type === 'add') { await addTerm(termName); alert("Eklendi!"); }
-      else if (type === 'edit') {
+      if (type === 'add') { 
+        await addTerm(termName); 
+        alert("Eklendi!"); 
+      } else if (type === 'edit') {
         const newName = prompt("Yeni isim:");
         await updateTerm(termName, newName);
         alert("Düzenlendi!");
-      } else { await removeTerm(termName); alert("Silindi!"); }
-    } else { alert("Hata: Yetkisiz erişim!"); }
+      } else { 
+        await removeTerm(termName); 
+        alert("Silindi!"); 
+      }
+    } else { 
+      alert("Hata: Yetkisiz erişim!"); 
+    }
   };
 
   return (
