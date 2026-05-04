@@ -9,7 +9,7 @@ export default function Home() {
           
           {/* Görsel Bölümü */}
           <img 
-            src="https://i.hizliresim.com/fvp09s7.png"
+            src="https://i.hizliresim.com/1vjg1ir.png"
             alt="Anatomi ve Fizyoloji Görseli"
             style={{ 
               width: '100%', 
