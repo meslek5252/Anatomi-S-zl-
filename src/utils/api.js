@@ -42,7 +42,7 @@ export const migrateLocalToFirebase = async () => {
     window.location.reload();
   }
 };
-X
+
 export const fetchWikiData = async (term) => {
   try {
     const res = await fetch(`https://tr.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(term)}`);
