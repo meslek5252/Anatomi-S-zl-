@@ -24,7 +24,6 @@ export default function TermDetail() {
           {/* Geri Dön Butonu */}
           <button onClick={() => navigate(-1)} className="back-btn">← Geri Dön</button>
 
-          {/* Başlık ve Görsel Alanı (Orijinal Sol/Sağ Düzen) */}
           <div className="detail-header">
             <h1 className="term-title">{id.toLocaleUpperCase('tr-TR')}</h1>
           </div>
@@ -101,9 +100,10 @@ export default function TermDetail() {
             }
 
             .term-description {
-              font-size: 1.1rem;
-              line-height: 1.7;
-              color: #333;
+              font-size: 1.2rem;
+              line-height: 1.8;
+              color: #000000;
+              font-weight: 700;
               text-align: justify;
             }
 
@@ -147,8 +147,6 @@ export default function TermDetail() {
           `}</style>
         </div>
       </div>
-      
-      {/* Sayfa altı butonları (Ekle, Düzenle, Sil) ve İletişim burada duruyor */}
       <Footer />
     </div>
   );

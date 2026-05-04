@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchAnatomyTerms, removeTerm, updateTerm } from '../utils/api';
 import { ADMIN_PASSWORD } from '../utils/config';
+import Footer from '../components/Footer';
 
 export default function Dictionary() {
   const [terms, setTerms] = useState([]);
@@ -66,6 +67,7 @@ export default function Dictionary() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
