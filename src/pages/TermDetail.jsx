@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchWikiData } from '../utils/api';
-import Footer from '../components/Footer';
 
 export default function TermDetail() {
-  const { id } = useParams();
+  const { isim } = useParams(); // Router tanımındaki :isim değişkeniyle eşleşti.
   const navigate = useNavigate();
   const [data, setData] = useState({ aciklama: '', gorsel: '' });
 
   useEffect(() => {
     const loadData = async () => {
-      if (!id) return;
-      const result = await fetchWikiData(id);
+      if (!isim) return;
+      const result = await fetchWikiData(isim);
       setData(result || { aciklama: '', gorsel: '' });
     };
     loadData();
-  }, [id]);
+  }, [isim]);
 
   return (
     <div className="main-layout bg-transparent" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -26,12 +25,12 @@ export default function TermDetail() {
 
           <div className="term-content-wrapper">
             <h1 className="term-title">
-              {id ? String(id).toLocaleUpperCase('tr-TR') : 'Yükleniyor...'}
+              {isim ? String(isim).toLocaleUpperCase('tr-TR') : 'Yükleniyor...'}
             </h1>
 
             {data.gorsel && (
               <div className="term-image-box">
-                <img src={data.gorsel} alt={id || ''} className="term-main-img" />
+                <img src={data.gorsel} alt={isim || ''} className="term-main-img" />
               </div>
             )}
 
@@ -128,7 +127,6 @@ export default function TermDetail() {
           `}</style>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

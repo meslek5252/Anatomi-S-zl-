@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchAnatomyTerms, removeTerm, updateTerm } from '../utils/api';
 import { ADMIN_PASSWORD } from '../utils/config';
-import Footer from '../components/Footer';
 
 export default function Dictionary() {
   const [terms, setTerms] = useState([]);
@@ -60,17 +59,15 @@ export default function Dictionary() {
           <div className="terms-grid">
             {filtered.map((t, i) => (
               <div key={i} className="term-card-wrapper">
-                <button onClick={() => handleEdit(t.isim)} className="edit-btn">✎</button>
+                <button onClick={() => constEdit(t.isim)} className="edit-btn">✎</button>
                 <Link to={`/terim/${t.isim}`} style={{ flex: 1, textAlign: 'center', textDecoration: 'none', color: '#1f2937', fontWeight: '600' }}>{t.isim}</Link>
-                <button onClick={() => handleRemove(t.isim)} className="delete-btn">✕</button>
+                <button onClick={() => constRemove(t.isim)} className="delete-btn">✕</button>
               </div>
             ))}
           </div>
         </div>
       </div>
-      
-      <Footer />
-      
+
       <style>{`
         .letter-btn {
           width: 38px;
