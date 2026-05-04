@@ -10,7 +10,6 @@ export default function TermDetail() {
 
   useEffect(() => {
     const loadData = async () => {
-      // id parametresi yoksa işlemi durdur
       if (!id) return;
       const result = await fetchWikiData(id);
       setData(result || { aciklama: '', gorsel: '' });
@@ -23,7 +22,6 @@ export default function TermDetail() {
       <div className="content-wrapper" style={{ flex: 1, padding: '20px 0' }}>
         <div className="detail-container">
           
-          {/* Geri Dön Butonu */}
           <button onClick={() => navigate(-1)} className="back-btn">← Geri Dön</button>
 
           <div className="term-content-wrapper">
@@ -54,7 +52,6 @@ export default function TermDetail() {
               width: 100%;
               position: relative;
             }
-
             .term-content-wrapper {
               max-width: 750px;
               width: 100%;
@@ -63,7 +60,6 @@ export default function TermDetail() {
               align-items: center;
               gap: 24px;
             }
-
             .term-title {
               font-size: 2.8rem;
               font-weight: 900;
@@ -72,7 +68,6 @@ export default function TermDetail() {
               margin-bottom: 5px;
               text-align: center;
             }
-
             .term-image-box {
               width: 100%;
               max-width: 450px;
@@ -81,13 +76,11 @@ export default function TermDetail() {
               box-shadow: 0 10px 25px rgba(0,0,0,0.18);
               border: 4px solid #ffffff;
             }
-
             .term-main-img {
               width: 100%;
               height: auto;
               display: block;
             }
-
             .description-glass-box {
               background: rgba(255, 255, 255, 0.75);
               backdrop-filter: blur(12px);
@@ -98,7 +91,6 @@ export default function TermDetail() {
               box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.12);
               width: 100%;
             }
-
             .term-description {
               font-size: 1.25rem;
               line-height: 1.8;
@@ -107,7 +99,6 @@ export default function TermDetail() {
               text-align: justify;
               margin: 0;
             }
-
             .back-btn {
               position: absolute;
               top: 20px;
@@ -123,11 +114,9 @@ export default function TermDetail() {
               transition: transform 0.2s;
               z-index: 100;
             }
-
             .back-btn:hover {
               transform: translateY(-2px);
             }
-
             @media (max-width: 768px) {
               .back-btn {
                 position: static;

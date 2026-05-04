@@ -107,8 +107,9 @@ export default function Dictionary() {
         }
         .term-card-wrapper:hover { transform: translateY(-3px); }
         .edit-btn { background: none; border: none; color: #22c55e; cursor: pointer; padding: 5px; opacity: 0.5; }
+        .term-card-wrapper:hover .edit-btn { opacity: 1; }
         .delete-btn { background: none; border: none; color: #ef4444; cursor: pointer; padding: 5px; opacity: 0.5; }
-        .term-card-wrapper:hover .edit-btn, .term-card-wrapper:hover .delete-btn { opacity: 1; }
+        .term-card-wrapper:hover .delete-btn { opacity: 1; }
       `}</style>
     </div>
   );
