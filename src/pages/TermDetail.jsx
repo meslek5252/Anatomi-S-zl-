@@ -10,6 +10,7 @@ export default function TermDetail() {
 
   useEffect(() => {
     const loadData = async () => {
+      // id parametresi yoksa işlemi durdur
       if (!id) return;
       const result = await fetchWikiData(id);
       setData(result || { aciklama: '', gorsel: '' });
@@ -27,7 +28,7 @@ export default function TermDetail() {
 
           <div className="term-content-wrapper">
             <h1 className="term-title">
-              {id ? id.toLocaleUpperCase('tr-TR') : 'Yükleniyor...'}
+              {id ? String(id).toLocaleUpperCase('tr-TR') : 'Yükleniyor...'}
             </h1>
 
             {data.gorsel && (

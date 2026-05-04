@@ -36,7 +36,10 @@ export default function Dictionary() {
   };
 
   const ALPHABET = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ".split("");
-  const filtered = terms.filter(t => (t.harf || (t.isim && t.isim.charAt(0).toLocaleUpperCase('tr-TR'))) === activeLetter);
+  const filtered = terms.filter(t => {
+    const currentName = t.harf || t.isim || "";
+    return currentName.charAt(0).toLocaleUpperCase('tr-TR') === activeLetter;
+  });
 
   return (
     <div className="main-layout bg-transparent" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>

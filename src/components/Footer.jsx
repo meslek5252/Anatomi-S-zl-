@@ -4,10 +4,6 @@ import { addTerm, removeTerm, updateTerm } from '../utils/api';
 
 export default function Footer() {
   const handleAction = async (type) => {
-    // İşlev korunuyor
-  };
-
-  const handleAction = async (type) => {
     const termName = prompt("İşlem yapılacak terim adı:");
     if (!termName) return;
     const password = prompt("Yönetici şifresi:");
@@ -30,9 +26,9 @@ export default function Footer() {
           <p style={{ fontSize: '13px', color: '#666', margin: 0 }}>İletişim: <a href="mailto:miracardabayr@gmail.com" style={{ color: '#0284c7', textDecoration: 'none' }}>miracardabayr@gmail.com</a></p>
         </div>
         <div className="action-buttons">
-          <button onClick={() => constAction('add')} className="action-btn">+ Yeni Ekle</button>
-          <button onClick={() => constAction('edit')} className="action-btn">✎ Düzenle</button>
-          <button onClick={() => constAction('delete')} className="action-btn">× Terim Sil</button>
+          <button onClick={() => handleAction('add')} className="action-btn">+ Yeni Ekle</button>
+          <button onClick={() => handleAction('edit')} className="action-btn">✎ Düzenle</button>
+          <button onClick={() => handleAction('delete')} className="action-btn">× Terim Sil</button>
         </div>
       </div>
       <style>{`
