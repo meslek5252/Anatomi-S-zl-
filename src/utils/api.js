@@ -48,7 +48,7 @@ export const fetchWikiData = async (term) => {
     const res = await fetch(`https://tr.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(term)}`);
     const data = await res.json();
     return {
-      aciklama: data.extract || "Bu terim hakkında Wikipedia üzerinde özet bilgi bulunamadı.",
+      aciklama: data.extract || "Bu terim hakkında bilgi henüz yüklenmedi...",
       gorsel: data.thumbnail?.source || "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Human_Anatomy.jpg/640px-Human_Anatomy.jpg"
     };
   } catch (e) {
