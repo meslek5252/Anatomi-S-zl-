@@ -10,6 +10,7 @@ export default function TermDetail() {
 
   useEffect(() => {
     const loadData = async () => {
+      if (!id) return;
       const result = await fetchWikiData(id);
       setData(result);
     };
@@ -25,20 +26,22 @@ export default function TermDetail() {
           <button onClick={() => navigate(-1)} className="back-btn">← Geri Dön</button>
 
           <div className="term-content-wrapper">
-            {/* Kelime Başlığı - Resmin Üstünde ve Ortada */}
-            <h1 className="term-title">{id.toLocaleUpperCase('tr-TR')}</h1>
+            {/* Kelime Başlığı - Güvenlik kontrolü eklendi */}
+            <h1 className="term-title">
+              {id ? id.toLocaleUpperCase('tr-TR') : 'Yükleniyor...'}
+            </h1>
 
             {/* Görsel - Ortalanmış */}
             {data.gorsel && (
               <div className="term-image-box">
-                <img src={data.gorsel} alt={id} className="term-main-img" />
+                <img src={data.gorsel} alt={id || ''} className="term-main-img" />
               </div>
             )}
 
             {/* Açıklama Alanı - Buzlu Cam Efekti */}
             <div className="description-glass-box">
               <p className="term-description">
-                {data.aciklama}
+                {data.aciklama || "Yükleniyor..."}
               </p>
             </div>
           </div>
@@ -87,7 +90,6 @@ export default function TermDetail() {
               display: block;
             }
 
-            /* Buzlu Cam (Glassmorphism) */
             .description-glass-box {
               background: rgba(255, 255, 255, 0.75);
               backdrop-filter: blur(12px);
