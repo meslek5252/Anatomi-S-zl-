@@ -9,7 +9,10 @@ export default function Dictionary() {
   const [activeLetter, setActiveLetter] = useState('A');
 
   useEffect(() => {
-    const loadTerms = async () => { setTerms(await fetchAnatomyTerms()); };
+    const loadTerms = async () => { 
+      const data = await fetchAnatomyTerms();
+      setTerms(data || []); 
+    };
     loadTerms();
   }, []);
 
@@ -27,7 +30,8 @@ export default function Dictionary() {
   const handleRemove = async (name) => {
     const pass = prompt("Silme için şifre girin:");
     if (pass && pass.trim() === ADMIN_PASSWORD) {
-      setTerms(await removeTerm(name));
+      const updated = await removeTerm(name);
+      setTerms(updated);
     } else if (pass !== null) { alert("Hatalı şifre!"); }
   };
 
@@ -35,12 +39,16 @@ export default function Dictionary() {
   const filtered = terms.filter(t => (t.harf || (t.isim && t.isim.charAt(0).toLocaleUpperCase('tr-TR'))) === activeLetter);
 
   return (
-    <div className="main-layout bg-transparent">
-      <div className="content-wrapper" style={{ minHeight: '80vh', padding: '20px' }}>
+    <div className="main-layout bg-transparent" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <div className="content-wrapper" style={{ flex: 1, minHeight: '80vh', padding: '20px' }}>
         <div className="glass-box">
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '6px', marginBottom: '30px' }}>
             {ALPHABET.map(l => (
-              <button key={l} onClick={() => setActiveLetter(l)} className={`letter-btn ${activeLetter === l ? 'active-letter' : ''}`}>
+              <button 
+                key={l} 
+                onClick={() => setActiveLetter(l)} 
+                className={`letter-btn ${activeLetter === l ? 'active-letter' : ''}`}
+              >
                 {l}
               </button>
             ))}

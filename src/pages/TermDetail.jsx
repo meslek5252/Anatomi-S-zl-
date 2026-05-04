@@ -12,21 +12,21 @@ export default function TermDetail() {
     const loadData = async () => {
       if (!id) return;
       const result = await fetchWikiData(id);
-      setData(result);
+      setData(result || { aciklama: '', gorsel: '' });
     };
     loadData();
   }, [id]);
 
   return (
-    <div className="main-layout bg-transparent">
-      <div className="content-wrapper" style={{ padding: '20px 0' }}>
+    <div className="main-layout bg-transparent" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <div className="content-wrapper" style={{ flex: 1, padding: '20px 0' }}>
         <div className="detail-container">
           
           {/* Geri Dön Butonu */}
           <button onClick={() => navigate(-1)} className="back-btn">← Geri Dön</button>
 
           <div className="term-content-wrapper">
-            {/* Kelime Başlığı - Güvenlik kontrolü eklendi */}
+            {/* Kelime Başlığı */}
             <h1 className="term-title">
               {id ? id.toLocaleUpperCase('tr-TR') : 'Yükleniyor...'}
             </h1>
