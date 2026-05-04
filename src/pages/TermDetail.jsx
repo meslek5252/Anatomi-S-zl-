@@ -10,139 +10,130 @@ export default function TermDetail() {
 
   useEffect(() => {
     const loadData = async () => {
+      if (!id) return;
       const result = await fetchWikiData(id);
-      setData(result);
+      setData(result || { aciklama: '', gorsel: '' });
     };
     loadData();
   }, [id]);
 
   return (
-    <div className="main-layout bg-transparent">
-      <div className="content-wrapper">
+    <div className="main-layout bg-transparent" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <div className="content-wrapper" style={{ flex: 1, padding: '20px 0' }}>
         <div className="detail-container">
           
           {/* Geri Dön Butonu */}
           <button onClick={() => navigate(-1)} className="back-btn">← Geri Dön</button>
 
-          <div className="detail-header">
-            <h1 className="term-title">{id.toLocaleUpperCase('tr-TR')}</h1>
-          </div>
+          <div className="term-content-wrapper">
+            <h1 className="term-title">
+              {id ? id.toLocaleUpperCase('tr-TR') : 'Yükleniyor...'}
+            </h1>
 
-          <div className="detail-content">
             {data.gorsel && (
               <div className="term-image-box">
-                <img src={data.gorsel} alt={id} className="term-main-img" />
+                <img src={data.gorsel} alt={id || ''} className="term-main-img" />
               </div>
             )}
-            
-            <div className="term-text-box">
+
+            <div className="description-glass-box">
               <p className="term-description">
-                {data.aciklama}
+                {data.aciklama || "Yükleniyor..."}
               </p>
             </div>
           </div>
 
           <style>{`
             .detail-container {
-              min-height: 70vh;
-              padding: 40px 20px;
+              min-height: 75vh;
+              padding: 20px;
               display: flex;
               flex-direction: column;
               align-items: center;
+              width: 100%;
               position: relative;
             }
 
-            .detail-header {
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
+            .term-content-wrapper {
+              max-width: 750px;
               width: 100%;
-              max-width: 900px;
-              margin-bottom: 30px;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              gap: 24px;
             }
 
             .term-title {
-              font-size: 2.5rem;
-              font-weight: 800;
-              color: #1f2937;
-              margin: 0 auto;
-            }
-
-            .detail-content {
-              display: flex;
-              gap: 40px;
-              max-width: 900px;
-              width: 100%;
-              align-items: flex-start;
-              background: rgba(255, 255, 255, 0.6);
-              padding: 30px;
-              border-radius: 25px;
-              box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+              font-size: 2.8rem;
+              font-weight: 900;
+              color: #1a1a1a;
+              text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.6);
+              margin-bottom: 5px;
+              text-align: center;
             }
 
             .term-image-box {
-              flex: 1;
-              max-width: 350px;
-              border-radius: 15px;
+              width: 100%;
+              max-width: 450px;
+              border-radius: 20px;
               overflow: hidden;
-              box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+              box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+              border: 4px solid #ffffff;
             }
 
             .term-main-img {
               width: 100%;
-              height: 250px;
-              object-fit: cover;
+              height: auto;
               display: block;
             }
 
-            .term-text-box {
-              flex: 2;
+            .description-glass-box {
+              background: rgba(255, 255, 255, 0.75);
+              backdrop-filter: blur(12px);
+              -webkit-backdrop-filter: blur(12px);
+              border-radius: 24px;
+              padding: 32px;
+              border: 1px solid rgba(255, 255, 255, 0.35);
+              box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.12);
+              width: 100%;
             }
 
             .term-description {
-              font-size: 1.2rem;
+              font-size: 1.25rem;
               line-height: 1.8;
               color: #000000;
               font-weight: 700;
               text-align: justify;
+              margin: 0;
             }
 
             .back-btn {
               position: absolute;
-              top: 40px;
-              left: 40px;
-              padding: 8px 18px;
-              background: #fff;
-              border: 1px solid #e5e7eb;
+              top: 20px;
+              left: 20px;
+              padding: 10px 22px;
+              background: #ffffff;
+              border: none;
               border-radius: 50px;
-              font-weight: 600;
-              color: #4b5563;
+              font-weight: 700;
+              color: #333;
               cursor: pointer;
-              box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-              transition: all 0.2s;
+              box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+              transition: transform 0.2s;
+              z-index: 100;
             }
 
             .back-btn:hover {
-              background: #f3f4f6;
+              transform: translateY(-2px);
             }
 
             @media (max-width: 768px) {
-              .detail-content {
-                flex-direction: column;
-                align-items: center;
-                gap: 20px;
-              }
-              .term-image-box {
-                max-width: 100%;
-                width: 100%;
-              }
-              .term-main-img {
-                height: 200px;
-              }
               .back-btn {
                 position: static;
-                margin-bottom: 20px;
+                margin-bottom: 10px;
               }
+              .term-title { font-size: 2.2rem; }
+              .term-description { font-size: 1.05rem; }
             }
           `}</style>
         </div>

@@ -2,13 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchAnatomyTerms, removeTerm, updateTerm } from '../utils/api';
 import { ADMIN_PASSWORD } from '../utils/config';
+import Footer from '../components/Footer';
 
 export default function Dictionary() {
   const [terms, setTerms] = useState([]);
   const [activeLetter, setActiveLetter] = useState('A');
 
   useEffect(() => {
-    const loadTerms = async () => { setTerms(await fetchAnatomyTerms()); };
+    const loadTerms = async () => { 
+      const data = await fetchAnatomyTerms();
+      setTerms(data || []); 
+    };
     loadTerms();
   }, []);
 
@@ -26,7 +30,8 @@ export default function Dictionary() {
   const handleRemove = async (name) => {
     const pass = prompt("Silme için şifre girin:");
     if (pass && pass.trim() === ADMIN_PASSWORD) {
-      setTerms(await removeTerm(name));
+      const updated = await removeTerm(name);
+      setTerms(updated);
     } else if (pass !== null) { alert("Hatalı şifre!"); }
   };
 
@@ -34,26 +39,20 @@ export default function Dictionary() {
   const filtered = terms.filter(t => (t.harf || (t.isim && t.isim.charAt(0).toLocaleUpperCase('tr-TR'))) === activeLetter);
 
   return (
-    <div className="main-layout bg-transparent">
-      <div className="content-wrapper">
+    <div className="main-layout bg-transparent" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <div className="content-wrapper" style={{ flex: 1, minHeight: '80vh', padding: '20px' }}>
         <div className="glass-box">
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px', marginBottom: '30px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '6px', marginBottom: '30px' }}>
             {ALPHABET.map(l => (
-              <button key={l} onClick={() => setActiveLetter(l)} className={`letter-btn ${activeLetter === l ? 'active-letter' : 'bg-white/70 text-gray-700'}`}>
+              <button 
+                key={l} 
+                onClick={() => setActiveLetter(l)} 
+                className={`letter-btn ${activeLetter === l ? 'active-letter' : ''}`}
+              >
                 {l}
               </button>
             ))}
           </div>
-          
-          <style>{`
-            .terms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; padding: 10px; }
-            .term-card-wrapper { position: relative; background: white; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; height: 60px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transition: transform 0.2s; }
-            .term-card-wrapper:hover { transform: translateY(-3px); }
-            .edit-btn { background: none; border: none; color: rgba(34, 197, 94, 0.3); cursor: pointer; padding: 5px; opacity: 0.5; }
-            .delete-btn { background: none; border: none; color: rgba(239, 68, 68, 0.3); cursor: pointer; padding: 5px; opacity: 0.5; }
-            .term-card-wrapper:hover .edit-btn { color: #22c55e; opacity: 1; }
-            .term-card-wrapper:hover .delete-btn { color: #ef4444; opacity: 1; }
-          `}</style>
           
           <div className="terms-grid">
             {filtered.map((t, i) => (
@@ -66,6 +65,48 @@ export default function Dictionary() {
           </div>
         </div>
       </div>
+      
+      <Footer />
+      
+      <style>{`
+        .letter-btn {
+          width: 38px;
+          height: 38px;
+          border-radius: 10px;
+          border: none;
+          font-weight: 700;
+          cursor: pointer;
+          background: rgba(255, 255, 255, 0.7);
+          color: #374151;
+          transition: all 0.2s;
+        }
+        .letter-btn:hover, .active-letter {
+          background: #2563eb;
+          color: white;
+        }
+        .terms-grid { 
+          display: grid; 
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+          gap: 15px; 
+          padding: 10px; 
+        }
+        .term-card-wrapper { 
+          position: relative; 
+          background: white; 
+          border-radius: 20px; 
+          display: flex; 
+          align-items: center; 
+          justify-content: space-between; 
+          padding: 0 10px; 
+          height: 60px; 
+          box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); 
+          transition: transform 0.2s; 
+        }
+        .term-card-wrapper:hover { transform: translateY(-3px); }
+        .edit-btn { background: none; border: none; color: #22c55e; cursor: pointer; padding: 5px; opacity: 0.5; }
+        .delete-btn { background: none; border: none; color: #ef4444; cursor: pointer; padding: 5px; opacity: 0.5; }
+        .term-card-wrapper:hover .edit-btn, .term-card-wrapper:hover .delete-btn { opacity: 1; }
+      `}</style>
     </div>
   );
 }
