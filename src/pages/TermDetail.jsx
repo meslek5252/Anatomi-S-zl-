@@ -1,58 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchWikiData, fetchAnatomyTerms } from '../utils/api';
+import { fetchAnatomyTerms } from '../utils/api';
 
 export default function TermDetail() {
   const { isim } = useParams();
   const navigate = useNavigate();
-  const [data, setData] = useState({ aciklama: '', gorsel: '' });
+  const [data, setData] = useState({ aciklama: 'Yükleniyor...', gorsel: '' });
 
   useEffect(() => {
     const loadData = async () => {
       if (!isim) return;
 
       try {
-        // Önce Vikipedi'den veri çekmeyi deneyelim
-        const result = await fetchWikiData(isim);
-        
-        if (result && (result.aciklama || result.gorsel)) {
-          setData(result);
-        } else {
-          // Vikipedi'de yoksa kendi veritabanımızdaki terimi arayalım
-          const terms = await fetchAnatomyTerms();
-          const foundTerm = terms.find(t => {
-            const termName = typeof t.isim === 'object' && t.isim !== null ? t.isim.isim : t.isim;
-            return termName === isim;
-          });
+        // Doğrudan kendi veritabanımızı çekiyoruz
+        const terms = await fetchAnatomyTerms();
+        const foundTerm = terms.find(t => {
+          const termName = typeof t.isim === 'object' && t.isim !== null ? t.isim.isim : t.isim;
+          return termName === isim;
+        });
 
-          if (foundTerm) {
-            setData({
-              aciklama: foundTerm.aciklama || 'Açıklama bulunamadı.',
-              gorsel: foundTerm.gorsel || ''
-            });
-          } else {
-            setData({ aciklama: 'Bu terime ait bilgi bulunamadı.', gorsel: '' });
-          }
+        if (foundTerm) {
+          setData({
+            aciklama: foundTerm.aciklama || 'Bu terim için açıklama girilmemiş.',
+            gorsel: foundTerm.gorsel || ''
+          });
+        } else {
+          setData({ 
+            aciklama: 'Bu terim sistemde bulunamadı.', 
+            gorsel: '' 
+          });
         }
       } catch (error) {
-        // Hata durumunda (404 vb.), sözlük veritabanından çekmeye çalışalım
-        try {
-          const terms = await fetchAnatomyTerms();
-          const foundTerm = terms.find(t => {
-            const termName = typeof t.isim === 'object' && t.isim !== null ? t.isim.isim : t.isim;
-            return termName === isim;
-          });
-          if (foundTerm) {
-            setData({
-              aciklama: foundTerm.aciklama || 'Açıklama bulunamadı.',
-              gorsel: foundTerm.gorsel || ''
-            });
-          }
-        } catch (e) {
-          console.error('Veri yüklenirken hata oluştu:', e);
-        }
+        console.error('Veri yüklenirken hata oluştu:', error);
+        setData({ 
+          aciklama: 'Veriler yüklenirken bir hata oluştu.', 
+          gorsel: '' 
+        });
       }
     };
+
     loadData();
   }, [isim]);
 
@@ -76,7 +62,7 @@ export default function TermDetail() {
 
             <div className="description-glass-box">
               <p className="term-description">
-                {data.aciklama || "Yükleniyor..."}
+                {data.aciklama}
               </p>
             </div>
           </div>
