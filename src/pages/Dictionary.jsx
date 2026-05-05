@@ -61,7 +61,7 @@ export default function Dictionary() {
       <div className="content-wrapper" style={{ flex: 1, padding: '20px 30px', marginTop: '10px' }}>
         <div className="glass-box" style={{ maxWidth: '1100px', margin: '0 auto' }}>
           
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '5px', marginBottom: '20px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '5px', marginBottom: '30px' }}>
             {ALPHABET.map(l => (
               <button 
                 key={l} 
@@ -79,32 +79,34 @@ export default function Dictionary() {
                 const displayName = typeof t.isim === 'object' && t.isim !== null ? t.isim.isim : t.isim;
 
                 return (
-                  <div key={i} className="term-card-wrapper">
-                    <button 
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleEdit(displayName);
-                      }} 
-                      className="edit-btn"
-                      title="Düzenle"
-                    >
-                      ✎
-                    </button>
-                    
-                    <Link to={`/terim/${displayName}`} className="term-link">
+                  <div key={i} className="term-card">
+                    <Link to={`/terim/${displayName}`} className="term-link" title={displayName}>
                       {displayName}
                     </Link>
 
-                    <button 
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleRemove(displayName);
-                      }} 
-                      className="delete-btn"
-                      title="Sil"
-                    >
-                      ✕
-                    </button>
+                    <div className="btn-group">
+                      <button 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleEdit(displayName);
+                        }} 
+                        className="action-btn edit-btn"
+                        title="Düzenle"
+                      >
+                        ✎
+                      </button>
+                      
+                      <button 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleRemove(displayName);
+                        }} 
+                        className="action-btn delete-btn"
+                        title="Sil"
+                      >
+                        ✕
+                      </button>
+                    </div>
                   </div>
                 );
               })
@@ -120,95 +122,103 @@ export default function Dictionary() {
 
       <style>{`
         .letter-btn {
-          width: 26px;
-          height: 26px;
+          width: 30px;
+          height: 30px;
           border-radius: 6px;
           border: none;
-          font-size: 0.75rem;
+          font-size: 0.8rem;
           font-weight: 700;
           cursor: pointer;
-          background: rgba(255, 255, 255, 0.85);
+          background: rgba(255, 255, 255, 0.9);
           color: #374151;
-          transition: all 0.2s;
-          box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+          transition: all 0.2s ease;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
+        
         .letter-btn:hover, .active-letter {
           background: #2563eb;
           color: white;
         }
+        
         .terms-grid { 
           display: grid; 
           grid-template-columns: repeat(5, 1fr); 
-          gap: 6px; 
-          padding: 6px; 
-          justify-content: center;
-          align-items: center;
+          gap: 12px; 
+          padding: 10px; 
         }
-        .term-card-wrapper { 
-          position: relative; 
+        
+        .term-card { 
           background: rgba(255, 255, 255, 0.95); 
-          border-radius: 9999px;
+          border-radius: 8px;
           display: flex; 
           align-items: center; 
           justify-content: space-between; 
-          padding: 0 6px; 
-          height: 24px; 
-          box-shadow: 0 1px 2px rgba(0,0,0,0.04); 
-          transition: transform 0.15s, box-shadow 0.15s; 
-          border: 1px solid rgba(0,0,0,0.03);
+          padding: 8px 12px; 
+          height: 38px; 
+          border: 1px solid rgba(0, 0, 0, 0.08);
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+          transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
           width: 100%;
           box-sizing: border-box;
-          overflow: visible;
         }
-        .term-card-wrapper:hover { 
-          transform: translateY(-1px); 
-          box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+        
+        .term-card:hover { 
+          transform: translateY(-2px); 
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.06);
+          border-color: rgba(37, 99, 235, 0.3);
         }
+        
         .term-link {
-          font-size: 0.58rem;
+          font-size: 0.75rem;
+          text-decoration: none;
+          color: #1f2937;
+          font-weight: 600;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          text-align: center;
-          color: #1f2937;
-          font-weight: 600;
-          flex: 1;
-          margin: 0 2px;
-          line-height: 24px;
+          max-width: 75%;
         }
-        .edit-btn { 
-          background: none; 
-          border: none; 
-          color: #16a34a; 
-          cursor: pointer; 
-          padding: 1px; 
-          opacity: 0; 
-          font-size: 0.65rem;
-          width: 16px;
-          height: 16px;
-          transition: opacity 0.15s;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .term-card-wrapper:hover .edit-btn { opacity: 1; }
         
-        .delete-btn { 
-          background: none; 
-          border: none; 
-          color: #dc2626; 
-          cursor: pointer; 
-          padding: 1px; 
-          opacity: 0; 
-          font-size: 0.65rem;
-          width: 16px;
-          height: 16px;
-          transition: opacity 0.15s;
+        .btn-group {
+          display: flex;
+          gap: 4px;
+          opacity: 0.4;
+          transition: opacity 0.2s ease;
+        }
+        
+        .term-card:hover .btn-group {
+          opacity: 1;
+        }
+        
+        .action-btn {
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          font-size: 0.75rem;
+          width: 20px;
+          height: 20px;
+          border-radius: 4px;
           display: flex;
           align-items: center;
           justify-content: center;
+          transition: background 0.15s ease;
         }
-        .term-card-wrapper:hover .delete-btn { opacity: 1; }
+        
+        .edit-btn {
+          color: #16a34a;
+        }
+        
+        .edit-btn:hover {
+          background: #dcfce7;
+        }
+        
+        .delete-btn {
+          color: #dc2626;
+        }
+        
+        .delete-btn:hover {
+          background: #fee2e2;
+        }
         
         @media (max-width: 1200px) {
           .terms-grid { grid-template-columns: repeat(4, 1fr); }
@@ -216,10 +226,10 @@ export default function Dictionary() {
         @media (max-width: 900px) {
           .terms-grid { grid-template-columns: repeat(3, 1fr); }
         }
-        @media (max-width: 600px) {
+        @media (max-width: 650px) {
           .terms-grid { grid-template-columns: repeat(2, 1fr); }
         }
-        @media (max-width: 400px) {
+        @media (max-width: 450px) {
           .terms-grid { grid-template-columns: 1fr; }
         }
       `}</style>
