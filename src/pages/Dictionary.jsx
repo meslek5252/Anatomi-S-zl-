@@ -41,7 +41,7 @@ export default function Dictionary() {
 
   const ALPHABET = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ".split("");
   
-  // Güvenli filtreleme: Dönen verinin nesne olup olmadığını ve isim içerip içermediğini kontrol eder
+  // Güvenli filtreleme: Hatalı, boş veya nesne olmayan yapıları doğrudan ayıklar.
   const filtered = terms.filter(t => {
     if (!t || typeof t !== 'object') return false;
     const currentName = t.isim || "";
