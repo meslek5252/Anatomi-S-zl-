@@ -5,11 +5,12 @@ export const fetchAnatomyTerms = async () => {
   return terms || [];
 };
 
-export const addTerm = async (name) => {
+export const addTerm = async (name, aciklama = "", gorsel = "") => {
   const terms = await getGlobalTerms() || [];
   const harf = name.charAt(0).toLocaleUpperCase('tr-TR');
+  
   if (!terms.find(t => t.isim === name)) {
-    const updatedTerms = [...terms, { isim: name, harf: harf }];
+    const updatedTerms = [...terms, { isim: name, harf: harf, aciklama, gorsel }];
     await saveGlobalTerms(updatedTerms);
     return updatedTerms;
   }
@@ -23,9 +24,19 @@ export const removeTerm = async (name) => {
   return filtered;
 };
 
-export const updateTerm = async (oldName, newName) => {
+export const updateTerm = async (oldName, newName, newDesc, newImg) => {
   const terms = await getGlobalTerms() || [];
-  const updated = terms.map(t => t.isim === oldName ? { ...t, isim: newName } : t);
+  const updated = terms.map(t => {
+    if (t.isim === oldName) {
+      return {
+        ...t,
+        isim: newName || t.isim,
+        aciklama: newDesc !== undefined ? newDesc : t.aciklama,
+        gorsel: newImg !== undefined ? newImg : t.gorsel
+      };
+    }
+    return t;
+  });
   await saveGlobalTerms(updated);
   return updated;
 };
