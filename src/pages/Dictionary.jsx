@@ -79,39 +79,39 @@ export default function Dictionary() {
 
                 return (
                   <div key={i} className="term-card">
+                    {/* DÜZENLE BUTONU (SOL TARAFTA) */}
+                    <button 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleEdit(displayName);
+                      }} 
+                      className="action-btn edit-btn"
+                      title="Düzenle"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                      </svg>
+                    </button>
+
                     <Link to={`/terim/${displayName}`} className="term-link" title={displayName}>
                       {displayName}
                     </Link>
 
-                    <div className="btn-group">
-                      <button 
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleEdit(displayName);
-                        }} 
-                        className="action-btn edit-btn"
-                        title="Düzenle"
-                      >
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon">
-                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                        </svg>
-                      </button>
-                      
-                      <button 
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleRemove(displayName);
-                        }} 
-                        className="action-btn delete-btn"
-                        title="Sil"
-                      >
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon">
-                          <line x1="18" y1="6" x2="6" y2="18"></line>
-                          <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                      </button>
-                    </div>
+                    {/* SİL BUTONU (SAĞ TARAFTA) */}
+                    <button 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleRemove(displayName);
+                      }} 
+                      className="action-btn delete-btn"
+                      title="Sil"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </button>
                   </div>
                 );
               })
@@ -134,25 +134,25 @@ export default function Dictionary() {
           justify-content: center;
           gap: 8px;
           margin-bottom: 40px;
-          padding: 10px;
-          background: rgba(255, 255, 255, 0.4);
-          border-radius: 20px;
-          backdrop-filter: blur(10px);
+          padding: 12px;
+          background: rgba(250, 245, 235, 0.5); /* Ana sayfa tonuna uygun sıcak arka plan */
+          border-radius: 24px;
+          backdrop-filter: blur(12px);
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.6);
+          border: 1px solid rgba(230, 215, 195, 0.6);
         }
 
         .letter-btn {
-          width: 36px;
-          height: 36px;
+          width: 34px;
+          height: 34px;
           border-radius: 10px;
           border: 1px solid transparent;
-          font-size: 0.9rem;
+          font-size: 0.85rem;
           font-weight: 600;
           cursor: pointer;
-          background: rgba(255, 255, 255, 0.7);
-          color: #4b5563;
-          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          background: rgba(255, 255, 255, 0.75);
+          color: #594a3e;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
           box-shadow: 0 2px 5px rgba(0,0,0,0.02);
           display: flex;
           align-items: center;
@@ -161,15 +161,15 @@ export default function Dictionary() {
         
         .letter-btn:hover {
           background: #ffffff;
-          color: #2563eb;
+          color: #c48b64;
           transform: translateY(-2px);
-          box-shadow: 0 4px 10px rgba(37, 99, 235, 0.1);
+          box-shadow: 0 4px 10px rgba(196, 139, 100, 0.15);
         }
 
         .active-letter {
-          background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+          background: #c48b64;
           color: #ffffff !important;
-          box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+          box-shadow: 0 4px 12px rgba(196, 139, 100, 0.3);
           border: 1px solid rgba(255, 255, 255, 0.2);
           transform: translateY(-2px);
         }
@@ -178,90 +178,57 @@ export default function Dictionary() {
         .terms-grid { 
           display: grid; 
           grid-template-columns: repeat(4, 1fr); 
-          gap: 16px; 
-          padding: 10px; 
+          gap: 12px; 
+          padding: 6px; 
         }
         
-        /* BALONCUK (PILL) KART TASARIMI */
+        /* BALONCUK (PILL) KART TASARIMI - KÜÇÜK VE ESTETİK */
         .term-card { 
-          background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
+          background: #faf8f5;
           border-radius: 50px;
           display: flex; 
           align-items: center; 
           justify-content: space-between; 
-          padding: 8px 16px 8px 20px; 
-          min-height: 54px; 
-          border: 1px solid rgba(255, 255, 255, 1);
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          padding: 4px 12px; 
+          min-height: 40px;
+          border: 1px solid #e1d5c9;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
           width: 100%;
           box-sizing: border-box;
-          position: relative;
-          overflow: hidden;
         }
 
-        .term-card::before {
-          content: '';
-          position: absolute;
-          top: 0; left: 0; right: 0; bottom: 0;
-          background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), transparent);
-          opacity: 0;
-          transition: opacity 0.3s ease;
-          pointer-events: none;
-        }
-        
         .term-card:hover { 
-          transform: translateY(-3px) scale(1.02); 
-          box-shadow: 0 10px 25px rgba(37, 99, 235, 0.12);
+          transform: translateY(-2px); 
+          box-shadow: 0 6px 15px rgba(196, 139, 100, 0.08);
           background: #ffffff;
-          border-color: rgba(59, 130, 246, 0.2);
-          z-index: 2;
-        }
-
-        .term-card:hover::before {
-          opacity: 1;
+          border-color: #c48b64;
         }
         
         /* TERİM LİNK TASARIMI */
         .term-link {
-          font-size: 0.9rem;
+          font-size: 0.82rem;
           text-decoration: none;
-          color: #1f2937;
+          color: #443c34;
           font-weight: 600;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          max-width: 75%;
-          letter-spacing: 0.2px;
-          z-index: 1;
+          max-width: 58%;
+          letter-spacing: 0.1px;
           transition: color 0.2s ease;
         }
 
         .term-card:hover .term-link {
-          color: #1d4ed8;
+          color: #8b5a3e;
         }
         
-        /* BUTON GRUBU VE EFEKTLERİ */
-        .btn-group {
-          display: flex;
-          gap: 6px;
-          opacity: 0;
-          transform: translateX(10px);
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          z-index: 1;
-        }
-        
-        .term-card:hover .btn-group {
-          opacity: 1;
-          transform: translateX(0);
-        }
-        
+        /* BUTONLAR KÜÇÜLTÜLDÜ VE RENKLENDİRİLDİ */
         .action-btn {
-          background: #f3f4f6;
-          border: 1px solid rgba(0,0,0,0.05);
+          border: none;
           cursor: pointer;
-          width: 32px;
-          height: 32px;
+          width: 26px;
+          height: 26px;
           border-radius: 50%;
           display: flex;
           align-items: center;
@@ -270,33 +237,35 @@ export default function Dictionary() {
         }
 
         .icon {
-          width: 14px;
-          height: 14px;
+          width: 12px;
+          height: 12px;
         }
         
+        /* DÜZENLE BUTONU */
         .edit-btn {
-          color: #059669;
+          background: rgba(46, 139, 87, 0.15);
+          color: #2e8b57;
         }
         
         .edit-btn:hover {
-          background: #10b981;
+          background: #2e8b57;
           color: white;
-          border-color: #10b981;
-          box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+          box-shadow: 0 2px 6px rgba(46, 139, 87, 0.25);
         }
         
+        /* SİL BUTONU */
         .delete-btn {
-          color: #dc2626;
+          background: rgba(178, 34, 34, 0.15);
+          color: #b22222;
         }
         
         .delete-btn:hover {
-          background: #ef4444;
+          background: #b22222;
           color: white;
-          border-color: #ef4444;
-          box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
+          box-shadow: 0 2px 6px rgba(178, 34, 34, 0.25);
         }
 
-        /* BOŞ DURUM (EMPTY STATE) TASARIMI */
+        /* BOŞ DURUM (EMPTY STATE) */
         .empty-state {
           grid-column: 1 / -1;
           display: flex;
@@ -306,7 +275,7 @@ export default function Dictionary() {
           padding: 60px 20px;
           background: rgba(255, 255, 255, 0.5);
           border-radius: 30px;
-          border: 1px dashed rgba(156, 163, 175, 0.5);
+          border: 1px dashed #d1c7bd;
         }
 
         .empty-icon {
@@ -316,7 +285,7 @@ export default function Dictionary() {
         }
 
         .empty-state p {
-          color: #6b7280;
+          color: #8a7a6c;
           font-size: 1.1rem;
           font-weight: 500;
           margin: 0;
@@ -328,14 +297,11 @@ export default function Dictionary() {
         }
         @media (max-width: 900px) {
           .terms-grid { grid-template-columns: repeat(2, 1fr); }
-          .term-card { min-height: 48px; }
         }
         @media (max-width: 600px) {
           .terms-grid { grid-template-columns: 1fr; }
           .alphabet-container { gap: 4px; padding: 6px; }
-          .letter-btn { width: 30px; height: 30px; font-size: 0.8rem; }
-          /* Mobilde butonlar hep görünür olsun ki dokunmatik ekranda kullanılabilsin */
-          .btn-group { opacity: 1; transform: translateX(0); }
+          .letter-btn { width: 28px; height: 28px; font-size: 0.75rem; }
         }
       `}</style>
     </div>
