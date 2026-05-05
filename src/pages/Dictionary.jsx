@@ -41,10 +41,19 @@ export default function Dictionary() {
 
   const ALPHABET = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ".split("");
   
-  // Güvenli filtreleme: Hatalı, boş veya nesne olmayan yapıları doğrudan ayıklar.
+  // Güvenli filtreleme motoru
   const filtered = terms.filter(t => {
-    if (!t || typeof t !== 'object' || !t.isim) return false;
-    return t.isim.charAt(0).toLocaleUpperCase('tr-TR') === activeLetter;
+    if (!t || typeof t !== 'object') return false;
+    
+    // İsim alanının yapısına göre veriyi güvenli oku
+    let nameValue = "";
+    if (typeof t.isim === 'object' && t.isim !== null) {
+      nameValue = t.isim.isim || "";
+    } else {
+      nameValue = t.isim || "";
+    }
+    
+    return nameValue.charAt(0).toLocaleUpperCase('tr-TR') === activeLetter;
   });
 
   return (
@@ -65,33 +74,37 @@ export default function Dictionary() {
           
           <div className="terms-grid">
             {filtered.length > 0 ? (
-              filtered.map((t, i) => (
-                <div key={i} className="term-card-wrapper">
-                  <button 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleEdit(t.isim);
-                    }} 
-                    className="edit-btn"
-                  >
-                    ✎
-                  </button>
-                  
-                  <Link to={`/terim/${t.isim}`} className="term-link" style={{ flex: 1, textAlign: 'center', textDecoration: 'none', color: '#1f2937', fontWeight: '600' }}>
-                    {t.isim}
-                  </Link>
+              filtered.map((t, i) => {
+                const displayName = typeof t.isim === 'object' && t.isim !== null ? t.isim.isim : t.isim;
 
-                  <button 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleRemove(t.isim);
-                    }} 
-                    className="delete-btn"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))
+                return (
+                  <div key={i} className="term-card-wrapper">
+                    <button 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleEdit(displayName);
+                      }} 
+                      className="edit-btn"
+                    >
+                      ✎
+                    </button>
+                    
+                    <Link to={`/terim/${displayName}`} className="term-link" style={{ flex: 1, textAlign: 'center', textDecoration: 'none', color: '#1f2937', fontWeight: '600' }}>
+                      {displayName}
+                    </Link>
+
+                    <button 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleRemove(displayName);
+                      }} 
+                      className="delete-btn"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                );
+              })
             ) : (
               <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#4b5563' }}>Bu harfle başlayan terim bulunamadı.</p>
             )}
