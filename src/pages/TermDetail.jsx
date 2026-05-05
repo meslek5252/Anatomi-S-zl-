@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchWikiData } from '../utils/api';
+import { fetchWikiData, fetchAnatomyTerms } from '../utils/api';
 
 export default function TermDetail() {
   const { isim } = useParams();
@@ -10,8 +10,48 @@ export default function TermDetail() {
   useEffect(() => {
     const loadData = async () => {
       if (!isim) return;
-      const result = await fetchWikiData(isim);
-      setData(result || { aciklama: '', gorsel: '' });
+
+      try {
+        // Önce Vikipedi'den veri çekmeyi deneyelim
+        const result = await fetchWikiData(isim);
+        
+        if (result && (result.aciklama || result.gorsel)) {
+          setData(result);
+        } else {
+          // Vikipedi'de yoksa kendi veritabanımızdaki terimi arayalım
+          const terms = await fetchAnatomyTerms();
+          const foundTerm = terms.find(t => {
+            const termName = typeof t.isim === 'object' && t.isim !== null ? t.isim.isim : t.isim;
+            return termName === isim;
+          });
+
+          if (foundTerm) {
+            setData({
+              aciklama: foundTerm.aciklama || 'Açıklama bulunamadı.',
+              gorsel: foundTerm.gorsel || ''
+            });
+          } else {
+            setData({ aciklama: 'Bu terime ait bilgi bulunamadı.', gorsel: '' });
+          }
+        }
+      } catch (error) {
+        // Hata durumunda (404 vb.), sözlük veritabanından çekmeye çalışalım
+        try {
+          const terms = await fetchAnatomyTerms();
+          const foundTerm = terms.find(t => {
+            const termName = typeof t.isim === 'object' && t.isim !== null ? t.isim.isim : t.isim;
+            return termName === isim;
+          });
+          if (foundTerm) {
+            setData({
+              aciklama: foundTerm.aciklama || 'Açıklama bulunamadı.',
+              gorsel: foundTerm.gorsel || ''
+            });
+          }
+        } catch (e) {
+          console.error('Veri yüklenirken hata oluştu:', e);
+        }
+      }
     };
     loadData();
   }, [isim]);
