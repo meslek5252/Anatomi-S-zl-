@@ -41,6 +41,7 @@ export default function Dictionary() {
 
   const ALPHABET = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ".split("");
   
+  // Güvenli filtreleme motoru
   const filtered = terms.filter(t => {
     if (!t || typeof t !== 'object') return false;
     
@@ -57,10 +58,10 @@ export default function Dictionary() {
   return (
     <div className="main-layout bg-transparent" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', margin: 0, padding: 0 }}>
       
-      <div className="content-wrapper" style={{ flex: 1, padding: '20px 40px', marginTop: '10px' }}>
-        <div className="glass-box" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+      <div className="content-wrapper" style={{ flex: 1, padding: '20px 30px', marginTop: '10px' }}>
+        <div className="glass-box" style={{ maxWidth: '1100px', margin: '0 auto' }}>
           
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '6px', marginBottom: '24px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '5px', marginBottom: '20px' }}>
             {ALPHABET.map(l => (
               <button 
                 key={l} 
@@ -90,7 +91,7 @@ export default function Dictionary() {
                       ✎
                     </button>
                     
-                    <Link to={`/terim/${displayName}`} className="term-link" style={{ flex: 1, textAlign: 'center', textDecoration: 'none', color: '#1f2937', fontWeight: '600' }}>
+                    <Link to={`/terim/${displayName}`} className="term-link">
                       {displayName}
                     </Link>
 
@@ -108,7 +109,7 @@ export default function Dictionary() {
                 );
               })
             ) : (
-              <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#4b5563', padding: '40px' }}>
+              <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#4b5563', padding: '30px' }}>
                 Bu harfle başlayan terim bulunamadı.
               </p>
             )}
@@ -119,16 +120,17 @@ export default function Dictionary() {
 
       <style>{`
         .letter-btn {
-          width: 30px;
-          height: 30px;
+          width: 28px;
+          height: 28px;
           border-radius: 6px;
           border: none;
+          font-size: 0.8rem;
           font-weight: 700;
           cursor: pointer;
           background: rgba(255, 255, 255, 0.85);
           color: #374151;
           transition: all 0.2s;
-          box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+          box-shadow: 0 1px 2px rgba(0,0,0,0.08);
         }
         .letter-btn:hover, .active-letter {
           background: #2563eb;
@@ -137,36 +139,42 @@ export default function Dictionary() {
         .terms-grid { 
           display: grid; 
           grid-template-columns: repeat(4, 1fr); 
-          gap: 10px; 
-          padding: 8px; 
+          gap: 8px; 
+          padding: 6px; 
           justify-content: center;
           align-items: center;
         }
         .term-card-wrapper { 
           position: relative; 
           background: rgba(255, 255, 255, 0.95); 
-          border-radius: 20px;
+          border-radius: 9999px; /* Tam kapsül formu */
           display: flex; 
           align-items: center; 
           justify-content: space-between; 
-          padding: 0 8px; 
-          height: 32px;
-          box-shadow: 0 1px 2px rgba(0,0,0,0.05); 
+          padding: 0 10px; 
+          height: 28px; /* En küçük zarif yükseklik */
+          box-shadow: 0 1px 2px rgba(0,0,0,0.04); 
           transition: transform 0.15s, box-shadow 0.15s; 
-          border: 1px solid rgba(0,0,0,0.04);
+          border: 1px solid rgba(0,0,0,0.03);
           width: 100%;
           box-sizing: border-box;
+          overflow: visible; /* Butonların taşarak gizlenmesini önler */
         }
         .term-card-wrapper:hover { 
           transform: translateY(-1px); 
           box-shadow: 0 2px 4px rgba(0,0,0,0.06);
         }
         .term-link {
-          font-size: 0.68rem;
+          font-size: 0.65rem;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          padding: 0 4px;
+          text-align: center;
+          color: #1f2937;
+          font-weight: 600;
+          flex: 1;
+          margin: 0 4px;
+          line-height: 28px;
         }
         .edit-btn { 
           background: none; 
@@ -175,10 +183,13 @@ export default function Dictionary() {
           cursor: pointer; 
           padding: 2px; 
           opacity: 0; 
-          font-size: 0.8rem;
-          width: 20px;
-          height: 20px;
+          font-size: 0.75rem;
+          width: 18px;
+          height: 18px;
           transition: opacity 0.15s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
         .term-card-wrapper:hover .edit-btn { opacity: 1; }
         
@@ -189,10 +200,13 @@ export default function Dictionary() {
           cursor: pointer; 
           padding: 2px; 
           opacity: 0; 
-          font-size: 0.8rem;
-          width: 20px;
-          height: 20px;
+          font-size: 0.75rem;
+          width: 18px;
+          height: 18px;
           transition: opacity 0.15s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
         .term-card-wrapper:hover .delete-btn { opacity: 1; }
         
