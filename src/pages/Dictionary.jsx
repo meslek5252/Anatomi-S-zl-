@@ -26,12 +26,16 @@ export default function Dictionary() {
     const pass = prompt("Düzenleme için şifre girin:");
     if (pass && pass.trim() === ADMIN_PASSWORD) {
       const newName = prompt("Yeni isim girin:", oldName);
-      // prompt ile girilen değerler null değilse alıyoruz (boş string girilirse de kabul edilir)
-      const newDesc = prompt("Yeni açıklama metnini girin:", oldDesc);
-      const newImg = prompt("Yeni görsel URL'ini girin:", oldImg);
+      
+      // Prompt değerlerinin doğru okunmasını sağlamak için doğrudan değişkenlere alıyoruz
+      const descInput = prompt("Yeni açıklama metnini girin:", oldDesc);
+      const imgInput = prompt("Yeni görsel URL'ini girin:", oldImg);
 
       if (newName !== null) {
-        // İlgili API fonksiyonuna 4 parametre gönderiyoruz (eski isim, yeni isim, yeni açıklama, yeni görsel)
+        // Kullanıcı iptal etmediği sürece yeni veya eski değerleri koruyarak atama yapıyoruz
+        const newDesc = descInput !== null ? descInput : oldDesc;
+        const newImg = imgInput !== null ? imgInput : oldImg;
+
         const updated = await updateTerm(oldName, newName, newDesc, newImg);
         if (updated) {
           setTerms(updated);
