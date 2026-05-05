@@ -41,7 +41,6 @@ export default function Dictionary() {
 
   const ALPHABET = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ".split("");
   
-  // Güvenli filtreleme
   const filtered = terms.filter(t => {
     if (!t || typeof t !== 'object') return false;
     
@@ -120,16 +119,16 @@ export default function Dictionary() {
 
       <style>{`
         .letter-btn {
-          width: 32px;
-          height: 32px;
-          border-radius: 8px;
+          width: 30px;
+          height: 30px;
+          border-radius: 6px;
           border: none;
           font-weight: 700;
           cursor: pointer;
           background: rgba(255, 255, 255, 0.85);
           color: #374151;
           transition: all 0.2s;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+          box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
         .letter-btn:hover, .active-letter {
           background: #2563eb;
@@ -137,32 +136,33 @@ export default function Dictionary() {
         }
         .terms-grid { 
           display: grid; 
-          grid-template-columns: repeat(4, minmax(200px, 1fr)); 
+          grid-template-columns: repeat(4, 1fr); 
           gap: 10px; 
           padding: 8px; 
           justify-content: center;
+          align-items: center;
         }
         .term-card-wrapper { 
           position: relative; 
           background: rgba(255, 255, 255, 0.95); 
-          border-radius: 24px;
+          border-radius: 20px;
           display: flex; 
           align-items: center; 
           justify-content: space-between; 
-          padding: 0 12px; 
-          height: 34px;
+          padding: 0 8px; 
+          height: 32px;
           box-shadow: 0 1px 2px rgba(0,0,0,0.05); 
           transition: transform 0.15s, box-shadow 0.15s; 
           border: 1px solid rgba(0,0,0,0.04);
-          overflow: hidden;
           width: 100%;
+          box-sizing: border-box;
         }
         .term-card-wrapper:hover { 
           transform: translateY(-1px); 
           box-shadow: 0 2px 4px rgba(0,0,0,0.06);
         }
         .term-link {
-          font-size: 0.72rem;
+          font-size: 0.68rem;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -173,20 +173,25 @@ export default function Dictionary() {
           border: none; 
           color: #16a34a; 
           cursor: pointer; 
-          padding: 2px 4px; 
+          padding: 2px; 
           opacity: 0; 
-          font-size: 0.85rem;
+          font-size: 0.8rem;
+          width: 20px;
+          height: 20px;
           transition: opacity 0.15s;
         }
         .term-card-wrapper:hover .edit-btn { opacity: 1; }
+        
         .delete-btn { 
           background: none; 
           border: none; 
           color: #dc2626; 
           cursor: pointer; 
-          padding: 2px 4px; 
+          padding: 2px; 
           opacity: 0; 
-          font-size: 0.85rem;
+          font-size: 0.8rem;
+          width: 20px;
+          height: 20px;
           transition: opacity 0.15s;
         }
         .term-card-wrapper:hover .delete-btn { opacity: 1; }
