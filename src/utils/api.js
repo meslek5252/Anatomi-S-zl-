@@ -2,7 +2,6 @@ import { getGlobalTerms, saveGlobalTerms } from './firebase';
 
 export const fetchAnatomyTerms = async () => {
   const terms = await getGlobalTerms();
-  // Verinin dizi olup olmadığını ve bozuk eleman içermediğini kontrol ediyoruz
   if (!Array.isArray(terms)) return [];
   return terms.filter(t => t && typeof t === 'object');
 };
@@ -39,7 +38,7 @@ export const updateTerm = async (oldName, newName, newDesc, newImg) => {
       };
     }
     return t;
-  }).filter(Boolean); // null olan hatalı verileri temizler
+  }).filter(Boolean); // Bozuk/null verileri tamamen listeden çıkarır.
 
   await saveGlobalTerms(updated);
   return updated;
