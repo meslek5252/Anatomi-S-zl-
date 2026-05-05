@@ -10,30 +10,23 @@ export default function Footer() {
     const password = prompt("Yönetici şifresini girin:");
     if (password && password.trim() === ADMIN_PASSWORD) {
       if (type === 'add') {
-        // Yeni ekleme modülü (İsim, Açıklama ve Görsel URL'i alır)
         const desc = prompt("Terim için açıklama girin:");
         const img = prompt("Görsel URL'i girin (İsteğe bağlı):");
-        
         await addTerm(termName, desc, img); 
         alert("Terim başarıyla eklendi!"); 
       } 
       else if (type === 'edit') {
-        // Gelişmiş düzenleme modülü
-        const newName = prompt("Yeni isim (Değiştirmek istemiyorsanız aynı bırakın):", termName);
+        const newName = prompt("Yeni isim:", termName);
         const newDesc = prompt("Yeni açıklama metnini girin:");
         const newImg = prompt("Yeni görsel URL'ini girin:");
         
-        await updateTerm(termName, {
-          isim: newName || termName,
-          aciklama: newDesc,
-          gorsel: newImg
-        });
+        // API katmanının hata vermemesi için değerleri string olarak gönderiyoruz
+        await updateTerm(termName, newName, newDesc, newImg);
         alert("Terim başarıyla güncellendi!");
       } 
       else if (type === 'delete') {
-        // Silme işlemi
         await removeTerm(termName);
-        alert("Terim ve içeriği (görsel/açıklama) silindi!");
+        alert("Terim ve içeriği silindi!");
       }
     } else {
       alert("Hata: Yetkisiz erişim!");
