@@ -15,17 +15,26 @@ export default function Dictionary() {
     loadTerms();
   }, []);
 
-  const handleEdit = async () => {}; // Hatalı tanımı önlemek için temizlendi
+  const handleEdit = async (termObject) => {
+    const oldName = typeof termObject.isim === 'object' && termObject.isim !== null 
+      ? termObject.isim.isim 
+      : termObject.isim;
+    const oldDesc = termObject.aciklama || "";
+    const oldImg = termObject.gorsel || "";
 
-  const handleEdit = async (oldName) => {
     const pass = prompt("Düzenleme için şifre girin:");
     if (pass && pass.trim() === ADMIN_PASSWORD) {
       const newName = prompt("Yeni isim girin:", oldName);
-      const newDesc = prompt("Yeni açıklama metnini girin:");
-      const newImg = prompt("Yeni görsel URL'ini girin:");
+      const newDesc = prompt("Yeni açıklama metnini girin:", oldDesc);
+      const newImg = prompt("Yeni görsel URL'ini girin:", oldImg);
 
-      const updated = await updateTerm(oldName, newName, newDesc, newImg);
-      setTerms(updated);
+      if (newName !== null) {
+        const updated = await updateTerm(oldName, newName, newDesc, newImg);
+        if (updated) {
+          setTerms(updated);
+          alert("Terim başarıyla güncellendi.");
+        }
+      }
     } else if (pass !== null) { 
       alert("Hatalı şifre!"); 
     }
@@ -35,7 +44,10 @@ export default function Dictionary() {
     const pass = prompt("Silme için şifre girin:");
     if (pass && pass.trim() === ADMIN_PASSWORD) {
       const updated = await removeTerm(name);
-      setTerms(updated);
+      if (updated) {
+        setTerms(updated);
+        alert("Terim başarıyla silindi.");
+      }
     } else if (pass !== null) { 
       alert("Hatalı şifre!"); 
     }
@@ -81,25 +93,36 @@ export default function Dictionary() {
 
                 return (
                   <div key={i} className="term-card">
-                    {/* Düzenle Butonu (Kalem Simgesi) */}
+                    {/* Düzenle Butonu (Ana sayfadaki gibi buton formatında) */}
                     <button 
                       onClick={(e) => {
                         e.preventDefault();
-                        handleEdit(displayName);
+                        handleEdit(t);
                       }} 
                       className="action-btn edit-btn"
                       title="Düzenle"
+                      style={{ 
+                        padding: '6px 12px', 
+                        background: '#0284c7', 
+                        color: 'white', 
+                        borderRadius: '20px', 
+                        textDecoration: 'none', 
+                        fontWeight: 'bold',
+                        border: 'none',
+                        boxShadow: '0 4px 10px rgba(2, 132, 199, 0.3)',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
+                      onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="feather feather-edit-2">
-                        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-                      </svg>
+                      Düzenle
                     </button>
 
                     <Link to={`/terim/${displayName}`} className="term-link" title={displayName}>
                       {displayName}
                     </Link>
 
-                    {/* Sil Butonu (Çöp Kutusu Simgesi) */}
+                    {/* Sil Butonu (Ana sayfadaki gibi buton formatında) */}
                     <button 
                       onClick={(e) => {
                         e.preventDefault();
@@ -107,11 +130,21 @@ export default function Dictionary() {
                       }} 
                       className="action-btn delete-btn"
                       title="Sil"
+                      style={{ 
+                        padding: '6px 12px', 
+                        background: '#e11d48', 
+                        color: 'white', 
+                        borderRadius: '20px', 
+                        textDecoration: 'none', 
+                        fontWeight: 'bold',
+                        border: 'none',
+                        boxShadow: '0 4px 10px rgba(225, 29, 72, 0.3)',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
+                      onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="feather feather-trash-2">
-                        <polyline points="3 6 5 6 21 6"></polyline>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                      </svg>
+                      Sil
                     </button>
                   </div>
                 );
@@ -176,19 +209,18 @@ export default function Dictionary() {
         
         .terms-grid { 
           display: grid; 
-          grid-template-columns: repeat(4, 1fr); 
-          gap: 12px; 
+          grid-template-columns: repeat(2, 1fr); 
+          gap: 20px; 
           padding: 6px; 
         }
         
         .term-card { 
           background: #faf8f5;
-          border-radius: 50px;
+          border-radius: 20px;
           display: flex; 
           align-items: center; 
           justify-content: space-between; 
-          padding: 4px 10px; 
-          min-height: 40px;
+          padding: 12px 24px; 
           border: 1px solid #e1d5c9;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
           transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -204,54 +236,21 @@ export default function Dictionary() {
         }
         
         .term-link {
-          font-size: 0.82rem;
+          font-size: 0.95rem;
           text-decoration: none;
           color: #443c34;
           font-weight: 600;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          max-width: 50%;
-          letter-spacing: 0.1px;
+          max-width: 40%;
+          letter-spacing: 0.2px;
           transition: color 0.2s ease;
+          text-align: center;
         }
 
         .term-card:hover .term-link {
           color: #8b5a3e;
-        }
-        
-        .action-btn {
-          border: none;
-          cursor: pointer;
-          width: 26px;
-          height: 26px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.2s ease;
-        }
-        
-        .edit-btn {
-          background: rgba(46, 139, 87, 0.18);
-          color: #2e8b57;
-        }
-        
-        .edit-btn:hover {
-          background: #2e8b57;
-          color: white;
-          box-shadow: 0 2px 6px rgba(46, 139, 87, 0.3);
-        }
-        
-        .delete-btn {
-          background: rgba(178, 34, 34, 0.18);
-          color: #b22222;
-        }
-        
-        .delete-btn:hover {
-          background: #b22222;
-          color: white;
-          box-shadow: 0 2px 6px rgba(178, 34, 34, 0.3);
         }
 
         .empty-state {
@@ -280,10 +279,7 @@ export default function Dictionary() {
         }
         
         @media (max-width: 1200px) {
-          .terms-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-        @media (max-width: 900px) {
-          .terms-grid { grid-template-columns: repeat(2, 1fr); }
+          .terms-grid { grid-template-columns: repeat(1, 1fr); }
         }
         @media (max-width: 600px) {
           .terms-grid { grid-template-columns: 1fr; }
