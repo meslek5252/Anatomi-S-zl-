@@ -79,7 +79,7 @@ export default function Dictionary() {
 
                 return (
                   <div key={i} className="term-card">
-                    {/* Düzenleme Butonu - Sol Tarafta */}
+                    {/* Düzenle Butonu ve Kalem İkonu */}
                     <button 
                       onClick={(e) => {
                         e.preventDefault();
@@ -88,9 +88,8 @@ export default function Dictionary() {
                       className="action-btn edit-btn"
                       title="Düzenle"
                     >
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="icon">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon">
+                        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
                       </svg>
                     </button>
 
@@ -98,7 +97,7 @@ export default function Dictionary() {
                       {displayName}
                     </Link>
 
-                    {/* Silme Butonu - Sağ Tarafta */}
+                    {/* Sil Butonu ve Çöp Kutusu İkonu */}
                     <button 
                       onClick={(e) => {
                         e.preventDefault();
@@ -107,9 +106,9 @@ export default function Dictionary() {
                       className="action-btn delete-btn"
                       title="Sil"
                     >
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="icon">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                       </svg>
                     </button>
                   </div>
@@ -127,7 +126,6 @@ export default function Dictionary() {
       </div>
 
       <style>{`
-        /* ALFABE BAR TASARIMI */
         .alphabet-container {
           display: flex;
           flex-wrap: wrap;
@@ -174,7 +172,6 @@ export default function Dictionary() {
           transform: translateY(-2px);
         }
         
-        /* IZGARA YAPISI */
         .terms-grid { 
           display: grid; 
           grid-template-columns: repeat(4, 1fr); 
@@ -182,14 +179,13 @@ export default function Dictionary() {
           padding: 6px; 
         }
         
-        /* BALONCUK (PILL) KART TASARIMI - İÇ İÇE TAM ENTEGRE */
         .term-card { 
           background: #faf8f5;
           border-radius: 50px;
           display: flex; 
           align-items: center; 
           justify-content: space-between; 
-          padding: 4px 10px; 
+          padding: 4px 12px; 
           min-height: 40px;
           border: 1px solid #e1d5c9;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
@@ -205,7 +201,6 @@ export default function Dictionary() {
           border-color: #c48b64;
         }
         
-        /* TERİM LİNK TASARIMI */
         .term-link {
           font-size: 0.82rem;
           text-decoration: none;
@@ -214,7 +209,7 @@ export default function Dictionary() {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          max-width: 54%;
+          max-width: 52%;
           letter-spacing: 0.1px;
           transition: color 0.2s ease;
         }
@@ -223,7 +218,6 @@ export default function Dictionary() {
           color: #8b5a3e;
         }
         
-        /* BUTONLAR */
         .action-btn {
           border: none;
           cursor: pointer;
@@ -237,11 +231,10 @@ export default function Dictionary() {
         }
 
         .icon {
-          width: 11px;
-          height: 11px;
+          width: 12px;
+          height: 12px;
         }
         
-        /* DÜZENLE BUTONU (YEŞİL TONLAMA) */
         .edit-btn {
           background: rgba(46, 139, 87, 0.18);
           color: #2e8b57;
@@ -253,7 +246,6 @@ export default function Dictionary() {
           box-shadow: 0 2px 6px rgba(46, 139, 87, 0.3);
         }
         
-        /* SİL BUTONU (KIRMIZI TONLAMA) */
         .delete-btn {
           background: rgba(178, 34, 34, 0.18);
           color: #b22222;
@@ -265,7 +257,6 @@ export default function Dictionary() {
           box-shadow: 0 2px 6px rgba(178, 34, 34, 0.3);
         }
 
-        /* BOŞ DURUM */
         .empty-state {
           grid-column: 1 / -1;
           display: flex;
@@ -291,7 +282,6 @@ export default function Dictionary() {
           margin: 0;
         }
         
-        /* RESPONSIVE TASARIM */
         @media (max-width: 1200px) {
           .terms-grid { grid-template-columns: repeat(3, 1fr); }
         }
