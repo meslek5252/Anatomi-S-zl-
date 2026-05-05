@@ -45,7 +45,6 @@ export default function Dictionary() {
   const filtered = terms.filter(t => {
     if (!t || typeof t !== 'object') return false;
     
-    // İsim alanının yapısına göre veriyi güvenli oku
     let nameValue = "";
     if (typeof t.isim === 'object' && t.isim !== null) {
       nameValue = t.isim.isim || "";
@@ -57,10 +56,14 @@ export default function Dictionary() {
   });
 
   return (
-    <div className="main-layout bg-transparent" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <div className="content-wrapper" style={{ flex: 1, minHeight: '80vh', padding: '20px' }}>
-        <div className="glass-box">
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '6px', marginBottom: '30px' }}>
+    <div className="main-layout bg-transparent" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', margin: 0, padding: 0 }}>
+      
+      {/* İçerik Sarıcısı (Kartların ve harflerin taşmasını engeller) */}
+      <div className="content-wrapper" style={{ flex: 1, padding: '20px 40px', marginTop: '10px' }}>
+        <div className="glass-box" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          
+          {/* Alfabe Butonları */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '6px', marginBottom: '24px' }}>
             {ALPHABET.map(l => (
               <button 
                 key={l} 
@@ -72,6 +75,7 @@ export default function Dictionary() {
             ))}
           </div>
           
+          {/* Terimler Tablosu (Sabit sütun sayısı ile kayma yapmaz) */}
           <div className="terms-grid">
             {filtered.length > 0 ? (
               filtered.map((t, i) => {
@@ -85,6 +89,7 @@ export default function Dictionary() {
                         handleEdit(displayName);
                       }} 
                       className="edit-btn"
+                      title="Düzenle"
                     >
                       ✎
                     </button>
@@ -99,6 +104,7 @@ export default function Dictionary() {
                         handleRemove(displayName);
                       }} 
                       className="delete-btn"
+                      title="Sil"
                     >
                       ✕
                     </button>
@@ -106,23 +112,27 @@ export default function Dictionary() {
                 );
               })
             ) : (
-              <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#4b5563' }}>Bu harfle başlayan terim bulunamadı.</p>
+              <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#4b5563', padding: '40px' }}>
+                Bu harfle başlayan terim bulunamadı.
+              </p>
             )}
           </div>
+          
         </div>
       </div>
 
       <style>{`
         .letter-btn {
-          width: 38px;
-          height: 38px;
-          border-radius: 10px;
+          width: 36px;
+          height: 36px;
+          border-radius: 8px;
           border: none;
           font-weight: 700;
           cursor: pointer;
-          background: rgba(255, 255, 255, 0.7);
+          background: rgba(255, 255, 255, 0.85);
           color: #374151;
           transition: all 0.2s;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         .letter-btn:hover, .active-letter {
           background: #2563eb;
@@ -130,27 +140,50 @@ export default function Dictionary() {
         }
         .terms-grid { 
           display: grid; 
-          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
-          gap: 15px; 
+          grid-template-columns: repeat(4, minmax(220px, 1fr)); 
+          gap: 16px; 
           padding: 10px; 
+          justify-content: center;
         }
         .term-card-wrapper { 
           position: relative; 
-          background: white; 
-          border-radius: 20px; 
+          background: rgba(255, 255, 255, 0.95); 
+          border-radius: 16px; 
           display: flex; 
           align-items: center; 
           justify-content: space-between; 
-          padding: 0 10px; 
-          height: 60px; 
-          box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); 
-          transition: transform 0.2s; 
+          padding: 0 12px; 
+          height: 54px; 
+          box-shadow: 0 2px 4px rgba(0,0,0,0.06); 
+          transition: transform 0.2s, box-shadow 0.2s; 
+          border: 1px solid rgba(0,0,0,0.05);
         }
-        .term-card-wrapper:hover { transform: translateY(-3px); }
-        .edit-btn { background: none; border: none; color: #22c55e; cursor: pointer; padding: 5px; opacity: 0.5; }
+        .term-card-wrapper:hover { 
+          transform: translateY(-2px); 
+          box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+        .term-link {
+          font-size: 0.9rem;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          padding: 0 4px;
+        }
+        .edit-btn { background: none; border: none; color: #16a34a; cursor: pointer; padding: 6px; opacity: 0.4; font-size: 1.1rem; }
         .term-card-wrapper:hover .edit-btn { opacity: 1; }
-        .delete-btn { background: none; border: none; color: #ef4444; cursor: pointer; padding: 5px; opacity: 0.5; }
+        .delete-btn { background: none; border: none; color: #dc2626; cursor: pointer; padding: 6px; opacity: 0.4; font-size: 1.1rem; }
         .term-card-wrapper:hover .delete-btn { opacity: 1; }
+        
+        /* Ekran küçüldüğünde duyarlı tasarım */
+        @media (max-width: 1200px) {
+          .terms-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 900px) {
+          .terms-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+          .terms-grid { grid-template-columns: 1fr; }
+        }
       `}</style>
     </div>
   );
