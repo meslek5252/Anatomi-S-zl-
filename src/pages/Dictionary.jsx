@@ -120,11 +120,11 @@ export default function Dictionary() {
 
       <style>{`
         .letter-btn {
-          width: 28px;
-          height: 28px;
+          width: 26px;
+          height: 26px;
           border-radius: 6px;
           border: none;
-          font-size: 0.8rem;
+          font-size: 0.75rem;
           font-weight: 700;
           cursor: pointer;
           background: rgba(255, 255, 255, 0.85);
@@ -138,8 +138,8 @@ export default function Dictionary() {
         }
         .terms-grid { 
           display: grid; 
-          grid-template-columns: repeat(4, 1fr); 
-          gap: 8px; 
+          grid-template-columns: repeat(5, 1fr); 
+          gap: 6px; 
           padding: 6px; 
           justify-content: center;
           align-items: center;
@@ -147,25 +147,25 @@ export default function Dictionary() {
         .term-card-wrapper { 
           position: relative; 
           background: rgba(255, 255, 255, 0.95); 
-          border-radius: 9999px; /* Tam kapsül formu */
+          border-radius: 9999px;
           display: flex; 
           align-items: center; 
           justify-content: space-between; 
-          padding: 0 10px; 
-          height: 28px; /* En küçük zarif yükseklik */
+          padding: 0 6px; 
+          height: 24px; 
           box-shadow: 0 1px 2px rgba(0,0,0,0.04); 
           transition: transform 0.15s, box-shadow 0.15s; 
           border: 1px solid rgba(0,0,0,0.03);
           width: 100%;
           box-sizing: border-box;
-          overflow: visible; /* Butonların taşarak gizlenmesini önler */
+          overflow: visible;
         }
         .term-card-wrapper:hover { 
           transform: translateY(-1px); 
           box-shadow: 0 2px 4px rgba(0,0,0,0.06);
         }
         .term-link {
-          font-size: 0.65rem;
+          font-size: 0.58rem;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -173,19 +173,19 @@ export default function Dictionary() {
           color: #1f2937;
           font-weight: 600;
           flex: 1;
-          margin: 0 4px;
-          line-height: 28px;
+          margin: 0 2px;
+          line-height: 24px;
         }
         .edit-btn { 
           background: none; 
           border: none; 
           color: #16a34a; 
           cursor: pointer; 
-          padding: 2px; 
+          padding: 1px; 
           opacity: 0; 
-          font-size: 0.75rem;
-          width: 18px;
-          height: 18px;
+          font-size: 0.65rem;
+          width: 16px;
+          height: 16px;
           transition: opacity 0.15s;
           display: flex;
           align-items: center;
@@ -198,11 +198,11 @@ export default function Dictionary() {
           border: none; 
           color: #dc2626; 
           cursor: pointer; 
-          padding: 2px; 
+          padding: 1px; 
           opacity: 0; 
-          font-size: 0.75rem;
-          width: 18px;
-          height: 18px;
+          font-size: 0.65rem;
+          width: 16px;
+          height: 16px;
           transition: opacity 0.15s;
           display: flex;
           align-items: center;
@@ -211,12 +211,15 @@ export default function Dictionary() {
         .term-card-wrapper:hover .delete-btn { opacity: 1; }
         
         @media (max-width: 1200px) {
-          .terms-grid { grid-template-columns: repeat(3, 1fr); }
+          .terms-grid { grid-template-columns: repeat(4, 1fr); }
         }
         @media (max-width: 900px) {
-          .terms-grid { grid-template-columns: repeat(2, 1fr); }
+          .terms-grid { grid-template-columns: repeat(3, 1fr); }
         }
         @media (max-width: 600px) {
+          .terms-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 400px) {
           .terms-grid { grid-template-columns: 1fr; }
         }
       `}</style>
