@@ -16,6 +16,7 @@ export default function Dictionary() {
   }, []);
 
   const handleEdit = async (termObject) => {
+    // Nesne içinden mevcut alanları güvenli bir şekilde alıyoruz
     const oldName = typeof termObject.isim === 'object' && termObject.isim !== null 
       ? termObject.isim.isim 
       : termObject.isim;
@@ -25,10 +26,12 @@ export default function Dictionary() {
     const pass = prompt("Düzenleme için şifre girin:");
     if (pass && pass.trim() === ADMIN_PASSWORD) {
       const newName = prompt("Yeni isim girin:", oldName);
+      // prompt ile girilen değerler null değilse alıyoruz (boş string girilirse de kabul edilir)
       const newDesc = prompt("Yeni açıklama metnini girin:", oldDesc);
       const newImg = prompt("Yeni görsel URL'ini girin:", oldImg);
 
       if (newName !== null) {
+        // İlgili API fonksiyonuna 4 parametre gönderiyoruz (eski isim, yeni isim, yeni açıklama, yeni görsel)
         const updated = await updateTerm(oldName, newName, newDesc, newImg);
         if (updated) {
           setTerms(updated);
@@ -93,7 +96,7 @@ export default function Dictionary() {
 
                 return (
                   <div key={i} className="term-card">
-                    {/* Düzenle Butonu (Ana sayfadaki gibi buton formatında) */}
+                    {/* Düzenle Butonu */}
                     <button 
                       onClick={(e) => {
                         e.preventDefault();
@@ -110,7 +113,8 @@ export default function Dictionary() {
                         fontWeight: 'bold',
                         border: 'none',
                         boxShadow: '0 4px 10px rgba(2, 132, 199, 0.3)',
-                        transition: 'all 0.2s ease'
+                        transition: 'all 0.2s ease',
+                        cursor: 'pointer'
                       }}
                       onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
                       onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
@@ -122,7 +126,7 @@ export default function Dictionary() {
                       {displayName}
                     </Link>
 
-                    {/* Sil Butonu (Ana sayfadaki gibi buton formatında) */}
+                    {/* Sil Butonu */}
                     <button 
                       onClick={(e) => {
                         e.preventDefault();
@@ -139,7 +143,8 @@ export default function Dictionary() {
                         fontWeight: 'bold',
                         border: 'none',
                         boxShadow: '0 4px 10px rgba(225, 29, 72, 0.3)',
-                        transition: 'all 0.2s ease'
+                        transition: 'all 0.2s ease',
+                        cursor: 'pointer'
                       }}
                       onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
                       onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
