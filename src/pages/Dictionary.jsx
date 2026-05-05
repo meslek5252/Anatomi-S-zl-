@@ -57,8 +57,8 @@ export default function Dictionary() {
   return (
     <div className="main-layout bg-transparent" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', margin: 0, padding: 0 }}>
       
-      <div className="content-wrapper" style={{ flex: 1, padding: '20px 30px', marginTop: '10px' }}>
-        <div className="glass-box" style={{ maxWidth: '1100px', margin: '0 auto' }}>
+      <div className="content-wrapper" style={{ flex: 1, padding: '40px 20px', marginTop: '10px' }}>
+        <div className="glass-box" style={{ maxWidth: '1200px', margin: '0 auto' }}>
           
           <div className="alphabet-container">
             {ALPHABET.map(l => (
@@ -92,7 +92,10 @@ export default function Dictionary() {
                         className="action-btn edit-btn"
                         title="Düzenle"
                       >
-                        ✎
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
                       </button>
                       
                       <button 
@@ -103,16 +106,20 @@ export default function Dictionary() {
                         className="action-btn delete-btn"
                         title="Sil"
                       >
-                        ✕
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon">
+                          <line x1="18" y1="6" x2="6" y2="18"></line>
+                          <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
                       </button>
                     </div>
                   </div>
                 );
               })
             ) : (
-              <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#4b5563', padding: '30px' }}>
-                Bu harfle başlayan terim bulunamadı.
-              </p>
+              <div className="empty-state">
+                <span className="empty-icon">🔍</span>
+                <p>Bu harfle başlayan terim bulunamadı.</p>
+              </div>
             )}
           </div>
           
@@ -120,108 +127,162 @@ export default function Dictionary() {
       </div>
 
       <style>{`
+        /* ALFABE BAR TASARIMI */
         .alphabet-container {
           display: flex;
           flex-wrap: wrap;
           justify-content: center;
-          gap: 6px;
-          margin-bottom: 28px;
+          gap: 8px;
+          margin-bottom: 40px;
+          padding: 10px;
+          background: rgba(255, 255, 255, 0.4);
+          border-radius: 20px;
+          backdrop-filter: blur(10px);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.6);
         }
 
         .letter-btn {
-          width: 30px;
-          height: 30px;
-          border-radius: 6px;
-          border: none;
-          font-size: 0.75rem;
-          font-weight: 700;
+          width: 36px;
+          height: 36px;
+          border-radius: 10px;
+          border: 1px solid transparent;
+          font-size: 0.9rem;
+          font-weight: 600;
           cursor: pointer;
-          background: rgba(255, 255, 255, 0.88);
-          color: #374151;
-          transition: all 0.15s ease;
-          box-shadow: 0 1px 2px rgba(0,0,0,0.08);
-        }
-        
-        .letter-btn:hover, .active-letter {
-          background: #2563eb;
-          color: white;
-          transform: translateY(-1px);
-        }
-        
-        .terms-grid { 
-          display: grid; 
-          grid-template-columns: repeat(4, 1fr); 
-          gap: 10px; 
-          padding: 6px; 
+          background: rgba(255, 255, 255, 0.7);
+          color: #4b5563;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+          display: flex;
+          align-items: center;
           justify-content: center;
         }
         
+        .letter-btn:hover {
+          background: #ffffff;
+          color: #2563eb;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 10px rgba(37, 99, 235, 0.1);
+        }
+
+        .active-letter {
+          background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+          color: #ffffff !important;
+          box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          transform: translateY(-2px);
+        }
+        
+        /* IZGARA YAPISI */
+        .terms-grid { 
+          display: grid; 
+          grid-template-columns: repeat(4, 1fr); 
+          gap: 16px; 
+          padding: 10px; 
+        }
+        
+        /* BALONCUK (PILL) KART TASARIMI */
         .term-card { 
-          background: rgba(255, 255, 255, 0.92); 
-          border-radius: 9999px;
+          background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
+          border-radius: 50px;
           display: flex; 
           align-items: center; 
           justify-content: space-between; 
-          padding: 0 12px; 
-          height: 30px; 
-          border: 1px solid rgba(255, 255, 255, 0.4);
-          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-          transition: all 0.15s ease;
+          padding: 8px 16px 8px 20px; 
+          min-height: 54px; 
+          border: 1px solid rgba(255, 255, 255, 1);
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           width: 100%;
           box-sizing: border-box;
-          overflow: visible;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .term-card::before {
+          content: '';
+          position: absolute;
+          top: 0; left: 0; right: 0; bottom: 0;
+          background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), transparent);
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          pointer-events: none;
         }
         
         .term-card:hover { 
-          transform: translateY(-1px); 
-          box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06);
+          transform: translateY(-3px) scale(1.02); 
+          box-shadow: 0 10px 25px rgba(37, 99, 235, 0.12);
           background: #ffffff;
-          border-color: rgba(37, 99, 235, 0.2);
+          border-color: rgba(59, 130, 246, 0.2);
+          z-index: 2;
+        }
+
+        .term-card:hover::before {
+          opacity: 1;
         }
         
+        /* TERİM LİNK TASARIMI */
         .term-link {
-          font-size: 0.65rem;
+          font-size: 0.9rem;
           text-decoration: none;
-          color: #111827;
+          color: #1f2937;
           font-weight: 600;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          max-width: 68%;
-          line-height: 28px;
+          max-width: 75%;
+          letter-spacing: 0.2px;
+          z-index: 1;
+          transition: color 0.2s ease;
+        }
+
+        .term-card:hover .term-link {
+          color: #1d4ed8;
         }
         
+        /* BUTON GRUBU VE EFEKTLERİ */
         .btn-group {
           display: flex;
-          gap: 4px;
-          opacity: 0.4;
-          transition: opacity 0.15s ease;
+          gap: 6px;
+          opacity: 0;
+          transform: translateX(10px);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          z-index: 1;
         }
         
         .term-card:hover .btn-group {
           opacity: 1;
+          transform: translateX(0);
         }
         
         .action-btn {
-          background: transparent;
-          border: none;
+          background: #f3f4f6;
+          border: 1px solid rgba(0,0,0,0.05);
           cursor: pointer;
-          font-size: 0.7rem;
-          width: 16px;
-          height: 16px;
+          width: 32px;
+          height: 32px;
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: all 0.1s ease;
+          transition: all 0.2s ease;
+        }
+
+        .icon {
+          width: 14px;
+          height: 14px;
         }
         
         .edit-btn {
-          color: #16a34a;
+          color: #059669;
         }
         
         .edit-btn:hover {
-          background: rgba(22, 163, 74, 0.15);
+          background: #10b981;
+          color: white;
+          border-color: #10b981;
+          box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
         }
         
         .delete-btn {
@@ -229,17 +290,52 @@ export default function Dictionary() {
         }
         
         .delete-btn:hover {
-          background: rgba(220, 38, 38, 0.15);
+          background: #ef4444;
+          color: white;
+          border-color: #ef4444;
+          box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
+        }
+
+        /* BOŞ DURUM (EMPTY STATE) TASARIMI */
+        .empty-state {
+          grid-column: 1 / -1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 60px 20px;
+          background: rgba(255, 255, 255, 0.5);
+          border-radius: 30px;
+          border: 1px dashed rgba(156, 163, 175, 0.5);
+        }
+
+        .empty-icon {
+          font-size: 2.5rem;
+          margin-bottom: 12px;
+          opacity: 0.5;
+        }
+
+        .empty-state p {
+          color: #6b7280;
+          font-size: 1.1rem;
+          font-weight: 500;
+          margin: 0;
         }
         
+        /* RESPONSIVE TASARIM */
         @media (max-width: 1200px) {
           .terms-grid { grid-template-columns: repeat(3, 1fr); }
         }
         @media (max-width: 900px) {
           .terms-grid { grid-template-columns: repeat(2, 1fr); }
+          .term-card { min-height: 48px; }
         }
         @media (max-width: 600px) {
           .terms-grid { grid-template-columns: 1fr; }
+          .alphabet-container { gap: 4px; padding: 6px; }
+          .letter-btn { width: 30px; height: 30px; font-size: 0.8rem; }
+          /* Mobilde butonlar hep görünür olsun ki dokunmatik ekranda kullanılabilsin */
+          .btn-group { opacity: 1; transform: translateX(0); }
         }
       `}</style>
     </div>
