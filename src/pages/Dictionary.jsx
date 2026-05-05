@@ -16,14 +16,12 @@ export default function Dictionary() {
   }, []);
 
   const handleEdit = async (oldName) => {
-    // Şifre kontrolü
     const pass = prompt("Düzenleme için şifre girin:");
     if (pass && pass.trim() === ADMIN_PASSWORD) {
       const newName = prompt("Yeni isim girin:", oldName);
       const newDesc = prompt("Yeni açıklama metnini girin:");
       const newImg = prompt("Yeni görsel URL'ini girin:");
 
-      // Değerleri tek tek (string/metin olarak) API'ye gönderiyoruz
       const updated = await updateTerm(oldName, newName, newDesc, newImg);
       setTerms(updated);
     } else if (pass !== null) { 
@@ -43,8 +41,9 @@ export default function Dictionary() {
 
   const ALPHABET = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ".split("");
   
-  // Güvenli filtreleme (İsim veya harf değerini kontrol et)
+  // Güvenli filtreleme: Dönen verinin nesne olup olmadığını ve isim içerip içermediğini kontrol eder
   const filtered = terms.filter(t => {
+    if (!t || typeof t !== 'object') return false;
     const currentName = t.isim || "";
     return currentName.charAt(0).toLocaleUpperCase('tr-TR') === activeLetter;
   });
@@ -66,33 +65,37 @@ export default function Dictionary() {
           </div>
           
           <div className="terms-grid">
-            {filtered.map((t, i) => (
-              <div key={i} className="term-card-wrapper">
-                <button 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleEdit(t.isim);
-                  }} 
-                  className="edit-btn"
-                >
-                  ✎
-                </button>
-                
-                <Link to={`/terim/${t.isim}`} className="term-link" style={{ flex: 1, textAlign: 'center', textDecoration: 'none', color: '#1f2937', fontWeight: '600' }}>
-                  {t.isim}
-                </Link>
+            {filtered.length > 0 ? (
+              filtered.map((t, i) => (
+                <div key={i} className="term-card-wrapper">
+                  <button 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleEdit(t.isim);
+                    }} 
+                    className="edit-btn"
+                  >
+                    ✎
+                  </button>
+                  
+                  <Link to={`/terim/${t.isim}`} className="term-link" style={{ flex: 1, textAlign: 'center', textDecoration: 'none', color: '#1f2937', fontWeight: '600' }}>
+                    {t.isim}
+                  </Link>
 
-                <button 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleRemove(t.isim);
-                  }} 
-                  className="delete-btn"
-                >
-                  ✕
-                </button>
-              </div>
-            ))}
+                  <button 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleRemove(t.isim);
+                    }} 
+                    className="delete-btn"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))
+            ) : (
+              <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#4b5563' }}>Bu harfle başlayan terim bulunamadı.</p>
+            )}
           </div>
         </div>
       </div>

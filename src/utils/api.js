@@ -2,7 +2,9 @@ import { getGlobalTerms, saveGlobalTerms } from './firebase';
 
 export const fetchAnatomyTerms = async () => {
   const terms = await getGlobalTerms();
-  return terms || [];
+  // Verinin dizi olup olmadığını ve bozuk eleman içermediğini kontrol ediyoruz
+  if (!Array.isArray(terms)) return [];
+  return terms.filter(t => t && typeof t === 'object');
 };
 
 export const addTerm = async (name, aciklama = "", gorsel = "") => {
@@ -19,7 +21,7 @@ export const addTerm = async (name, aciklama = "", gorsel = "") => {
 
 export const removeTerm = async (name) => {
   const terms = await getGlobalTerms() || [];
-  const filtered = terms.filter(t => t.isim !== name);
+  const filtered = terms.filter(t => t && t.isim !== name);
   await saveGlobalTerms(filtered);
   return filtered;
 };
@@ -27,16 +29,18 @@ export const removeTerm = async (name) => {
 export const updateTerm = async (oldName, newName, newDesc, newImg) => {
   const terms = await getGlobalTerms() || [];
   const updated = terms.map(t => {
+    if (!t || typeof t !== 'object') return null;
     if (t.isim === oldName) {
       return {
         ...t,
         isim: newName || t.isim,
-        aciklama: newDesc !== undefined ? newDesc : t.aciklama,
-        gorsel: newImg !== undefined ? newImg : t.gorsel
+        aciklama: newDesc !== undefined && newDesc !== null ? newDesc : t.aciklama,
+        gorsel: newImg !== undefined && newImg !== null ? newImg : t.gorsel
       };
     }
     return t;
-  });
+  }).filter(Boolean); // null olan hatalı verileri temizler
+
   await saveGlobalTerms(updated);
   return updated;
 };
