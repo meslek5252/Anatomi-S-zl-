@@ -58,11 +58,9 @@ export default function Dictionary() {
   return (
     <div className="main-layout bg-transparent" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', margin: 0, padding: 0 }}>
       
-      {/* İçerik Sarıcısı (Kartların ve harflerin taşmasını engeller) */}
       <div className="content-wrapper" style={{ flex: 1, padding: '20px 40px', marginTop: '10px' }}>
         <div className="glass-box" style={{ maxWidth: '1200px', margin: '0 auto' }}>
           
-          {/* Alfabe Butonları */}
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '6px', marginBottom: '24px' }}>
             {ALPHABET.map(l => (
               <button 
@@ -75,7 +73,6 @@ export default function Dictionary() {
             ))}
           </div>
           
-          {/* Terimler Tablosu (Sabit sütun sayısı ile kayma yapmaz) */}
           <div className="terms-grid">
             {filtered.length > 0 ? (
               filtered.map((t, i) => {
@@ -153,17 +150,18 @@ export default function Dictionary() {
           align-items: center; 
           justify-content: space-between; 
           padding: 0 12px; 
-          height: 54px; 
+          height: 48px; 
           box-shadow: 0 2px 4px rgba(0,0,0,0.06); 
           transition: transform 0.2s, box-shadow 0.2s; 
           border: 1px solid rgba(0,0,0,0.05);
+          overflow: hidden; 
         }
         .term-card-wrapper:hover { 
           transform: translateY(-2px); 
           box-shadow: 0 4px 10px rgba(0,0,0,0.08);
         }
         .term-link {
-          font-size: 0.9rem;
+          font-size: 0.88rem;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -174,7 +172,6 @@ export default function Dictionary() {
         .delete-btn { background: none; border: none; color: #dc2626; cursor: pointer; padding: 6px; opacity: 0.4; font-size: 1.1rem; }
         .term-card-wrapper:hover .delete-btn { opacity: 1; }
         
-        /* Ekran küçüldüğünde duyarlı tasarım */
         @media (max-width: 1200px) {
           .terms-grid { grid-template-columns: repeat(3, 1fr); }
         }
