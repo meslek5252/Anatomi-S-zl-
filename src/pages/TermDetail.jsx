@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { fetchWikiData } from '../utils/api';
 
 export default function TermDetail() {
-  const { isim } = useParams(); // Router tanımındaki :isim değişkeniyle eşleşti.
+  const { isim } = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState({ aciklama: '', gorsel: '' });
 

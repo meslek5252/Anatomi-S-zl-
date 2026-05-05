@@ -4,23 +4,36 @@ import { addTerm, removeTerm, updateTerm } from '../utils/api';
 
 export default function Footer() {
   const handleAction = async (type) => {
-    const termName = prompt("İşlem yapılacak terim adı:");
+    const termName = prompt("İşlem yapılacak terim adını girin:");
     if (!termName) return;
-    const password = prompt("Yönetici şifresi:");
     
+    const password = prompt("Yönetici şifresini girin:");
     if (password && password.trim() === ADMIN_PASSWORD) {
       if (type === 'add') {
-        await addTerm(termName);
-        alert("Eklendi!");
-      } else if (type === 'edit') {
-        const newName = prompt("Yeni isim:", termName);
-        if (newName) {
-          await updateTerm(termName, newName);
-          alert("Düzenlendi!");
-        }
-      } else {
+        // Yeni ekleme modülü (İsim, Açıklama ve Görsel URL'i alır)
+        const desc = prompt("Terim için açıklama girin:");
+        const img = prompt("Görsel URL'i girin (İsteğe bağlı):");
+        
+        await addTerm(termName, desc, img); 
+        alert("Terim başarıyla eklendi!"); 
+      } 
+      else if (type === 'edit') {
+        // Gelişmiş düzenleme modülü
+        const newName = prompt("Yeni isim (Değiştirmek istemiyorsanız aynı bırakın):", termName);
+        const newDesc = prompt("Yeni açıklama metnini girin:");
+        const newImg = prompt("Yeni görsel URL'ini girin:");
+        
+        await updateTerm(termName, {
+          isim: newName || termName,
+          aciklama: newDesc,
+          gorsel: newImg
+        });
+        alert("Terim başarıyla güncellendi!");
+      } 
+      else if (type === 'delete') {
+        // Silme işlemi
         await removeTerm(termName);
-        alert("Silindi!");
+        alert("Terim ve içeriği (görsel/açıklama) silindi!");
       }
     } else {
       alert("Hata: Yetkisiz erişim!");
