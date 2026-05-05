@@ -120,8 +120,8 @@ export default function Dictionary() {
 
       <style>{`
         .letter-btn {
-          width: 36px;
-          height: 36px;
+          width: 32px;
+          height: 32px;
           border-radius: 8px;
           border: none;
           font-weight: 700;
@@ -137,39 +137,59 @@ export default function Dictionary() {
         }
         .terms-grid { 
           display: grid; 
-          grid-template-columns: repeat(4, minmax(220px, 1fr)); 
-          gap: 16px; 
-          padding: 10px; 
+          grid-template-columns: repeat(4, minmax(200px, 1fr)); 
+          gap: 12px; 
+          padding: 8px; 
           justify-content: center;
         }
         .term-card-wrapper { 
           position: relative; 
           background: rgba(255, 255, 255, 0.95); 
-          border-radius: 16px; 
+          border-radius: 50px; /* Baloncuk (oval/kapsül) görünümü */
           display: flex; 
           align-items: center; 
           justify-content: space-between; 
-          padding: 0 12px; 
-          height: 48px; 
-          box-shadow: 0 2px 4px rgba(0,0,0,0.06); 
+          padding: 0 16px; 
+          height: 40px; /* İstediğiniz daha küçük ve kibar boyut */
+          box-shadow: 0 1px 3px rgba(0,0,0,0.06); 
           transition: transform 0.2s, box-shadow 0.2s; 
           border: 1px solid rgba(0,0,0,0.05);
-          overflow: hidden; 
+          overflow: hidden;
+          width: 100%;
         }
         .term-card-wrapper:hover { 
-          transform: translateY(-2px); 
-          box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+          transform: translateY(-1px); 
+          box-shadow: 0 3px 6px rgba(0,0,0,0.08);
         }
         .term-link {
-          font-size: 0.88rem;
+          font-size: 0.78rem; /* Fontu küçülttük */
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          padding: 0 4px;
+          padding: 0 6px;
         }
-        .edit-btn { background: none; border: none; color: #16a34a; cursor: pointer; padding: 6px; opacity: 0.4; font-size: 1.1rem; }
+        .edit-btn { 
+          background: none; 
+          border: none; 
+          color: #16a34a; 
+          cursor: pointer; 
+          padding: 4px; 
+          opacity: 0; 
+          font-size: 0.9rem;
+          transition: opacity 0.2s;
+        }
         .term-card-wrapper:hover .edit-btn { opacity: 1; }
-        .delete-btn { background: none; border: none; color: #dc2626; cursor: pointer; padding: 6px; opacity: 0.4; font-size: 1.1rem; }
+        
+        .delete-btn { 
+          background: none; 
+          border: none; 
+          color: #dc2626; 
+          cursor: pointer; 
+          padding: 4px; 
+          opacity: 0; 
+          font-size: 0.9rem;
+          transition: opacity 0.2s;
+        }
         .term-card-wrapper:hover .delete-btn { opacity: 1; }
         
         @media (max-width: 1200px) {
