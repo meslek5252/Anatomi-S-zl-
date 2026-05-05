@@ -19,11 +19,15 @@ export default function Dictionary() {
     const pass = prompt("Düzenleme için şifre girin:");
     if (pass && pass.trim() === ADMIN_PASSWORD) {
       const newName = prompt("Yeni isim girin:", oldName);
-      if (newName) {
-        const updated = await updateTerm(oldName, newName);
-        setTerms(updated);
-      }
-    } else if (pass !== null) { alert("Hatalı şifre!"); }
+      const newDesc = prompt("Yeni açıklama girin:");
+      const newImg = prompt("Yeni görsel URL'i girin:");
+
+      // Girdileri string olarak API'ye gönderiyoruz
+      const updated = await updateTerm(oldName, newName, newDesc, newImg);
+      setTerms(updated);
+    } else if (pass !== null) { 
+      alert("Hatalı şifre!"); 
+    }
   };
 
   const handleRemove = async (name) => {
@@ -31,7 +35,9 @@ export default function Dictionary() {
     if (pass && pass.trim() === ADMIN_PASSWORD) {
       const updated = await removeTerm(name);
       setTerms(updated);
-    } else if (pass !== null) { alert("Hatalı şifre!"); }
+    } else if (pass !== null) { 
+      alert("Hatalı şifre!"); 
+    }
   };
 
   const ALPHABET = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ".split("");
