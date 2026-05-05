@@ -3,7 +3,8 @@ import { getGlobalTerms, saveGlobalTerms } from './firebase';
 export const fetchAnatomyTerms = async () => {
   const terms = await getGlobalTerms();
   if (!Array.isArray(terms)) return [];
-  return terms.filter(t => t && typeof t === 'object');
+  // Sadece tanımlı ve geçerli nesneleri filtrele
+  return terms.filter(t => t && typeof t === 'object' && t.isim !== undefined);
 };
 
 export const addTerm = async (name, aciklama = "", gorsel = "") => {
@@ -20,15 +21,18 @@ export const addTerm = async (name, aciklama = "", gorsel = "") => {
 
 export const removeTerm = async (name) => {
   const terms = await getGlobalTerms() || [];
-  const filtered = terms.filter(t => t && t.isim !== name);
+  const filtered = terms.filter(t => t && typeof t === 'object' && t.isim !== name);
   await saveGlobalTerms(filtered);
   return filtered;
 };
 
 export const updateTerm = async (oldName, newName, newDesc, newImg) => {
   const terms = await getGlobalTerms() || [];
+  
   const updated = terms.map(t => {
     if (!t || typeof t !== 'object') return null;
+    
+    // Eğer bu terim güncellenecek olan terim ise
     if (t.isim === oldName) {
       return {
         ...t,
@@ -38,7 +42,7 @@ export const updateTerm = async (oldName, newName, newDesc, newImg) => {
       };
     }
     return t;
-  }).filter(Boolean); // Bozuk/null verileri tamamen listeden çıkarır.
+  }).filter(Boolean); // Bozuk kayıtları tamamen sil
 
   await saveGlobalTerms(updated);
   return updated;

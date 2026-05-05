@@ -43,9 +43,8 @@ export default function Dictionary() {
   
   // Güvenli filtreleme: Hatalı, boş veya nesne olmayan yapıları doğrudan ayıklar.
   const filtered = terms.filter(t => {
-    if (!t || typeof t !== 'object') return false;
-    const currentName = t.isim || "";
-    return currentName.charAt(0).toLocaleUpperCase('tr-TR') === activeLetter;
+    if (!t || typeof t !== 'object' || !t.isim) return false;
+    return t.isim.charAt(0).toLocaleUpperCase('tr-TR') === activeLetter;
   });
 
   return (
