@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchAnatomyTerms } from '../utils/api';
+import { fetchAnatomyTerms, fetchWikiData } from '../utils/api';
 
 export default function TermDetail() {
   const { isim } = useParams();
@@ -12,23 +12,43 @@ export default function TermDetail() {
       if (!isim) return;
 
       try {
-        // Doğrudan kendi veritabanımızı çekiyoruz
+        
         const terms = await fetchAnatomyTerms();
+        
+        
         const foundTerm = terms.find(t => {
           const termName = typeof t.isim === 'object' && t.isim !== null ? t.isim.isim : t.isim;
           return termName === isim;
         });
 
-        if (foundTerm) {
+        
+        if (foundTerm && foundTerm.aciklama && foundTerm.aciklama.trim() !== "") {
           setData({
-            aciklama: foundTerm.aciklama || 'Bu terim için açıklama girilmemiş.',
+            aciklama: foundTerm.aciklama,
             gorsel: foundTerm.gorsel || ''
           });
         } else {
-          setData({ 
-            aciklama: 'Bu terim sistemde bulunamadı.', 
-            gorsel: '' 
-          });
+          
+          try {
+            const wikiResult = await fetchWikiData(isim);
+            if (wikiResult && (wikiResult.aciklama || wikiResult.gorsel)) {
+              setData({
+                aciklama: wikiResult.aciklama || 'Bu terim için Wikipedia açıklaması bulunamadı.',
+                gorsel: wikiResult.gorsel || ''
+              });
+            } else {
+              setData({ 
+                aciklama: 'Bu terime ait herhangi bir açıklama bulunamadı.', 
+                gorsel: '' 
+              });
+            }
+          } catch (wikiError) {
+            
+            setData({
+              aciklama: foundTerm ? 'Bu terim sistemde bulunuyor ancak açıklaması girilmemiş.' : 'Bu terim sistemde bulunamadı.',
+              gorsel: foundTerm?.gorsel || ''
+            });
+          }
         }
       } catch (error) {
         console.error('Veri yüklenirken hata oluştu:', error);
