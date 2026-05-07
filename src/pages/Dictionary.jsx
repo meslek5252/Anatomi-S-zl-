@@ -435,7 +435,7 @@ export default function Dictionary() {
           >
             <input 
               type="text"
-              placeholder={isHoveringSearch ? "Sözlükte Ara" : "Terim arayın (Örn: amigdala veya am)..."}
+              placeholder={isHoveringSearch ? "Sözlükte Ara" : "Terim arayın (Örn: amigdala..)..."}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onMouseEnter={playHoverSound}
