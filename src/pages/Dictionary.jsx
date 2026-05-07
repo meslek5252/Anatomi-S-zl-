@@ -67,27 +67,29 @@ export default function Dictionary() {
     sessionStorage.setItem('selectedLetter', activeLetter);
   }, [activeLetter]);
 
-// Kelimeleri yükleme ve yağmuru hazırlama
+  // Kelimeleri yükleme ve rastgele 8 tanesini seçme
   useEffect(() => {
     const loadTerms = async () => { 
-      console.log("Sözlükten gelen ham veri:", data); // loglama DAHA SONRA SİL
       const data = await fetchAnatomyTerms();
-      const validData = data || [];
-      setTerms(validData); 
+      setTerms(data || []); 
       
-      if (validData.length > 0) {
-        const shuffled = [...validData].sort(() => 0.5 - Math.random());
+      if (data && data.length > 0) {
+        // Tüm kelimeleri rastgele karıştır (Fisher-Yates)
+        const shuffled = [...data].sort(() => 0.5 - Math.random());
+        
         const initialItems = shuffled.slice(0, 8).map((termObj) => {
           const name = typeof termObj.isim === 'object' && termObj.isim !== null ? termObj.isim.isim : termObj.isim;
           return {
             id: Math.random(),
-            name: name || "Anatomi",
-            x: Math.random() * 80 + 5,
-            y: -100 - Math.random() * 300, // DEĞİŞTİRİLEBİLİR DAHA SONRA?
+            name,
+            x: Math.random() * 80 + 5, // %5 ile %85 arası
+            y: -100 - Math.random() * 200,
             vx: 0,
             vy: 0.6 + Math.random() * 0.4,
             rotation: (Math.random() - 0.5) * 20,
             rotationSpeed: (Math.random() - 0.5) * 0.5,
+            width: 120,
+            height: 40,
             isDragged: false,
           };
         });
@@ -97,106 +99,97 @@ export default function Dictionary() {
     loadTerms();
   }, []);
 
-// Çarpışma ve Fizik Motoru
-useEffect(() => {
-  // Koşullardan biri sağlanmazsa motoru hiç başlatma
-  if (!isRainEnabled || location.pathname !== '/' || rainItems.length === 0) return;
+  // Elastik Çarpışma ve Fizik Motoru
+  useEffect(() => {
+    if (!isRainEnabled || location.pathname !== '/' || rainItems.length === 0) return;
 
-  let animationFrame;
+    let animationFrame;
+    const updatePhysics = () => {
+      setRainItems((prevItems) => {
+        let newItems = prevItems.map(item => {
+          if (item.isDragged) return item;
 
-  const updatePhysics = () => {
-    setRainItems((prevItems) => {
-      // 1. Hareket ve Yerçekimi Hesaplama
-      let newItems = prevItems.map(item => {
-        if (item.isDragged) return item;
+          let newX = item.x + item.vx;
+          let newY = item.y + item.vy;
 
-        let newX = item.x + item.vx;
-        let newY = item.y + item.vy;
-        let newVx = item.vx * 0.98; // Hava sürtünmesi
-        let newVy = item.vy + 0.03; // Yerçekimi ivmesi
+          let newVx = item.vx * 0.98;
+          let newVy = item.vy + 0.03;
 
-        // Ekranın altına düşen kelimeyi yukarı ışınla (Reset)
-        if (newY > window.innerHeight + 60) {
-          if (terms && terms.length > 0) {
-            const randomIndex = Math.floor(Math.random() * terms.length);
-            const randomTerm = terms[randomIndex];
-            const newName = typeof randomTerm.isim === 'object' && randomTerm.isim !== null 
-              ? randomTerm.isim.isim 
-              : randomTerm.isim;
+          // Ekranın altına düşen kelimeyi rastgele yeni bir kelimeyle değiştir
+          if (newY > window.innerHeight + 60) {
+            if (terms.length > 0) {
+              const randomIndex = Math.floor(Math.random() * terms.length);
+              const randomTerm = terms[randomIndex];
+              const newName = typeof randomTerm.isim === 'object' && randomTerm.isim !== null 
+                ? randomTerm.isim.isim 
+                : randomTerm.isim;
 
-            return {
-              ...item,
-              name: newName || "Anatomi",
-              y: -50 - Math.random() * 150,
-              x: Math.random() * 85 + 5,
-              vy: 0.6 + Math.random() * 0.5,
-              vx: (Math.random() - 0.5) * 0.5,
-              rotation: (Math.random() - 0.5) * 40
-            };
+              newY = -50 - Math.random() * 100;
+              newX = Math.random() * 80 + 5;
+              item.name = newName; // İsmi güncelle
+              newVy = 0.6 + Math.random() * 0.4;
+              newVx = 0;
+            }
+          }
+
+          return {
+            ...item,
+            x: newX,
+            y: newY,
+            vx: newVx,
+            vy: newVy,
+            rotation: item.rotation + item.rotationSpeed
+          };
+        });
+
+        // Çarpışma Çözümleyicisi
+        for (let i = 0; i < newItems.length; i++) {
+          for (let j = i + 1; j < newItems.length; j++) {
+            const itemA = newItems[i];
+            const itemB = newItems[j];
+
+            const dx = itemB.x - itemA.x;
+            const dy = itemB.y - itemA.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < 80) {
+              const overlap = 80 - distance;
+              const nx = dx / distance;
+              const ny = dy / distance;
+
+              newItems[i].x -= nx * overlap * 0.5;
+              newItems[i].y -= ny * overlap * 0.5;
+              newItems[j].x += nx * overlap * 0.5;
+              newItems[j].y += ny * overlap * 0.5;
+
+              const kx = itemA.vx - itemB.vx;
+              const ky = itemA.vy - itemB.vy;
+              const p = 2 * (nx * kx + ny * ky) / 2;
+
+              newItems[i].vx -= p * nx;
+              newItems[i].vy -= p * ny;
+              newItems[j].vx += p * nx;
+              newItems[j].vy += p * ny;
+              
+              newItems[i].rotationSpeed += (Math.random() - 0.5) * 1.5;
+              newItems[j].rotationSpeed += (Math.random() - 0.5) * 1.5;
+            }
           }
         }
-
-        return {
-          ...item,
-          x: newX,
-          y: newY,
-          vx: newVx,
-          vy: newVy,
-          rotation: item.rotation + item.rotationSpeed
-        };
+        return newItems;
       });
 
-      // 2. Çarpışma Çözümleyici (Collision Resolver)
-      for (let i = 0; i < newItems.length; i++) {
-        for (let j = i + 1; j < newItems.length; j++) {
-          const itemA = newItems[i];
-          const itemB = newItems[j];
-          
-          // Mesafe hesaplama (Hipotenüs)
-          const dx = ((itemB.x - itemA.x) / 100) * window.innerWidth;
-          const dy = itemB.y - itemA.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          // Eğer kelimeler birbirine çok yakınsa (80px sınırı)
-          if (distance < 80 && distance > 0) {
-            const overlap = 80 - distance;
-            const nx = dx / distance;
-            const ny = dy / distance;
-
-            // Birbirlerini itsinler
-            newItems[i].x -= (nx * overlap * 0.5 / window.innerWidth) * 100;
-            newItems[i].y -= ny * overlap * 0.5;
-            newItems[j].x += (nx * overlap * 0.5 / window.innerWidth) * 100;
-            newItems[j].y += ny * overlap * 0.5;
-
-            // Hız değişimi (Sekme efekti)
-            const p = 2 * (newItems[i].vx * nx + newItems[i].vy * ny - newItems[j].vx * nx - newItems[j].vy * ny) / 2;
-            newItems[i].vx -= p * nx;
-            newItems[i].vy -= p * ny;
-            newItems[j].vx += p * nx;
-            newItems[j].vy += p * ny;
-          }
-        }
-      }
-      return newItems;
-    });
+      animationFrame = requestAnimationFrame(updatePhysics);
+    };
 
     animationFrame = requestAnimationFrame(updatePhysics);
-  };
+    return () => cancelAnimationFrame(animationFrame);
+  }, [isRainEnabled, rainItems, location.pathname, terms]);
 
-  animationFrame = requestAnimationFrame(updatePhysics);
-  
-  // Temizlik fonksiyonu
-  return () => cancelAnimationFrame(animationFrame);
-
-// KRİTİK DEĞİŞİKLİK BURADA: rainItems.length'i buradan çıkardık!
-}, [isRainEnabled, location.pathname, terms]);
-
-
-  // sürükle bırak işlemi
+  // Sürükle ve Bırak İşlemleri
   const handleMouseDown = (e, itemId) => {
     playClickSound();
-    playClickSound();  
+    playClickSound(); // Eski uyarıyı da engellemek için eklendi
     const item = rainItems.find(i => i.id === itemId);
     if (!item) return;
 
@@ -442,7 +435,7 @@ useEffect(() => {
           >
             <input 
               type="text"
-              placeholder={isHoveringSearch ? "Sözlükte Ara" : "Terim arayın (Örn: amigdala..)..."}
+              placeholder={isHoveringSearch ? "Sözlükte Ara" : "Terim arayın (Örneğin: amigdala)..."}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onMouseEnter={playHoverSound}
@@ -635,45 +628,30 @@ useEffect(() => {
           }
         }
 
+        .rain-container {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 0;
+          pointer-events: auto;
+          overflow: hidden;
+        }
 
-.rain-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 50;
-  pointer-events: none; 
-  overflow: hidden;
-}
-
-.rain-item {
-  position: absolute;
-  color: rgba(68, 60, 52, 0.8);
-  font-weight: 800;
-  font-size: 1.1rem; 
-  white-space: nowrap;
-  padding: 8px 16px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.6); /* Cam efekti için opaklık arttı */
-  backdrop-filter: blur(4px); /* Kelimelere de hafif blur */
-  border: 1px solid rgba(196, 139, 100, 0.3);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  cursor: grab;
-  pointer-events: auto; 
-  user-select: none;
-  z-index: 2;
-}
-
-
-        .rain-item:active {
-  cursor: grabbing;
-  background: rgba(196, 139, 100, 0.25) !important; /* Tutulduğunda hafif kahvemsi/altın tonu */
-  border-color: #c48b64;
-  box-shadow: 0 8px 20px rgba(196, 139, 100, 0.3); /* Tutarken hafif yükselme efekti */
-  transform: scale(1.05); /* Kelimeyi tutunca hafifçe büyütür */
-  z-index: 100; /* Diğer yağan kelimelerin üstünde kalmasını sağlar */
-}
+        .rain-item {
+          position: absolute;
+          color: rgba(68, 60, 52, 0.6);
+          font-weight: 800;
+          font-size: 1.4rem;
+          white-space: nowrap;
+          padding: 5px 12px;
+          border-radius: 14px;
+          background: rgba(255, 255, 255, 0.35);
+          border: 1px solid rgba(196, 139, 100, 0.2);
+          box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+          transition: transform 0.05s linear;
+        }
 
         .alphabet-container {
           display: flex;
