@@ -70,6 +70,7 @@ export default function Dictionary() {
 // Kelimeleri yükleme ve yağmuru hazırlama
   useEffect(() => {
     const loadTerms = async () => { 
+      console.log("Sözlükten gelen ham veri:", data); // loglama DAHA SONRA SİL
       const data = await fetchAnatomyTerms();
       const validData = data || [];
       setTerms(validData); 
@@ -82,7 +83,7 @@ export default function Dictionary() {
             id: Math.random(),
             name: name || "Anatomi",
             x: Math.random() * 80 + 5,
-            y: -100 - Math.random() * 500, // Daha geniş bir alandan başlasınlar
+            y: -100 - Math.random() * 300, // DEĞİŞTİRİLEBİLİR DAHA SONRA?
             vx: 0,
             vy: 0.6 + Math.random() * 0.4,
             rotation: (Math.random() - 0.5) * 20,
@@ -96,92 +97,101 @@ export default function Dictionary() {
     loadTerms();
   }, []);
 
-// çarpışma motoru
-  useEffect(() => {
-    if (!isRainEnabled || location.pathname !== '/' || rainItems.length === 0) return;
+// Çarpışma ve Fizik Motoru
+useEffect(() => {
+  // Koşullardan biri sağlanmazsa motoru hiç başlatma
+  if (!isRainEnabled || location.pathname !== '/' || rainItems.length === 0) return;
 
-    let animationFrame;
-    const updatePhysics = () => {
-      setRainItems((prevItems) => {
-        let newItems = prevItems.map(item => {
-          if (item.isDragged) return item;
+  let animationFrame;
 
-          let newX = item.x + item.vx;
-          let newY = item.y + item.vy;
-          let newVx = item.vx * 0.98;
-          let newVy = item.vy + 0.03;
+  const updatePhysics = () => {
+    setRainItems((prevItems) => {
+      // 1. Hareket ve Yerçekimi Hesaplama
+      let newItems = prevItems.map(item => {
+        if (item.isDragged) return item;
 
-          // Ekranın altına düşen kelimeyi BAŞTAN OLUŞTURARAK yukarı atıyoruz
-          if (newY > window.innerHeight + 60) {
-            if (terms && terms.length > 0) {
-              const randomIndex = Math.floor(Math.random() * terms.length);
-              const randomTerm = terms[randomIndex];
-              const newName = typeof randomTerm.isim === 'object' && randomTerm.isim !== null 
-                ? randomTerm.isim.isim 
-                : randomTerm.isim;
+        let newX = item.x + item.vx;
+        let newY = item.y + item.vy;
+        let newVx = item.vx * 0.98; // Hava sürtünmesi
+        let newVy = item.vy + 0.03; // Yerçekimi ivmesi
 
+        // Ekranın altına düşen kelimeyi yukarı ışınla (Reset)
+        if (newY > window.innerHeight + 60) {
+          if (terms && terms.length > 0) {
+            const randomIndex = Math.floor(Math.random() * terms.length);
+            const randomTerm = terms[randomIndex];
+            const newName = typeof randomTerm.isim === 'object' && randomTerm.isim !== null 
+              ? randomTerm.isim.isim 
+              : randomTerm.isim;
 
-              return {
-                ...item,
-                name: newName || "Anatomi",
-                y: -50 - Math.random() * 100,
-                x: Math.random() * 80 + 5,
-                vy: 0.6 + Math.random() * 0.4,
-                vx: 0,
-                rotation: (Math.random() - 0.5) * 20
-              };
-            }
-          }
-
-          return {
-            ...item,
-            x: newX,
-            y: newY,
-            vx: newVx,
-            vy: newVy,
-            rotation: item.rotation + item.rotationSpeed
-          };
-        });
-
-        // çarpışma çözümleyici
-        for (let i = 0; i < newItems.length; i++) {
-          for (let j = i + 1; j < newItems.length; j++) {
-            const itemA = newItems[i];
-            const itemB = newItems[j];
-            const dx = itemB.x - itemA.x;
-            const dy = itemB.y - itemA.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance < 80) {
-              const overlap = 80 - distance;
-              const nx = dx / distance;
-              const ny = dy / distance;
-
-              newItems[i].x -= nx * overlap * 0.5;
-              newItems[i].y -= ny * overlap * 0.5;
-              newItems[j].x += nx * overlap * 0.5;
-              newItems[j].y += ny * overlap * 0.5;
-
-              const kx = itemA.vx - itemB.vx;
-              const ky = itemA.vy - itemB.vy;
-              const p = 2 * (nx * kx + ny * ky) / 2;
-
-              newItems[i].vx -= p * nx;
-              newItems[i].vy -= p * ny;
-              newItems[j].vx += p * nx;
-              newItems[j].vy += p * ny;
-            }
+            return {
+              ...item,
+              name: newName || "Anatomi",
+              y: -50 - Math.random() * 150,
+              x: Math.random() * 85 + 5,
+              vy: 0.6 + Math.random() * 0.5,
+              vx: (Math.random() - 0.5) * 0.5,
+              rotation: (Math.random() - 0.5) * 40
+            };
           }
         }
-        return newItems;
+
+        return {
+          ...item,
+          x: newX,
+          y: newY,
+          vx: newVx,
+          vy: newVy,
+          rotation: item.rotation + item.rotationSpeed
+        };
       });
 
-      animationFrame = requestAnimationFrame(updatePhysics);
-    };
+      // 2. Çarpışma Çözümleyici (Collision Resolver)
+      for (let i = 0; i < newItems.length; i++) {
+        for (let j = i + 1; j < newItems.length; j++) {
+          const itemA = newItems[i];
+          const itemB = newItems[j];
+          
+          // Mesafe hesaplama (Hipotenüs)
+          const dx = ((itemB.x - itemA.x) / 100) * window.innerWidth;
+          const dy = itemB.y - itemA.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          // Eğer kelimeler birbirine çok yakınsa (80px sınırı)
+          if (distance < 80 && distance > 0) {
+            const overlap = 80 - distance;
+            const nx = dx / distance;
+            const ny = dy / distance;
+
+            // Birbirlerini itsinler
+            newItems[i].x -= (nx * overlap * 0.5 / window.innerWidth) * 100;
+            newItems[i].y -= ny * overlap * 0.5;
+            newItems[j].x += (nx * overlap * 0.5 / window.innerWidth) * 100;
+            newItems[j].y += ny * overlap * 0.5;
+
+            // Hız değişimi (Sekme efekti)
+            const p = 2 * (newItems[i].vx * nx + newItems[i].vy * ny - newItems[j].vx * nx - newItems[j].vy * ny) / 2;
+            newItems[i].vx -= p * nx;
+            newItems[i].vy -= p * ny;
+            newItems[j].vx += p * nx;
+            newItems[j].vy += p * ny;
+          }
+        }
+      }
+      return newItems;
+    });
 
     animationFrame = requestAnimationFrame(updatePhysics);
-    return () => cancelAnimationFrame(animationFrame);
-  }, [isRainEnabled, location.pathname, terms.length, rainItems.length]); // Dependency listesi güncellendi
+  };
+
+  animationFrame = requestAnimationFrame(updatePhysics);
+  
+  // Temizlik fonksiyonu
+  return () => cancelAnimationFrame(animationFrame);
+
+// KRİTİK DEĞİŞİKLİK BURADA: rainItems.length'i buradan çıkardık!
+}, [isRainEnabled, location.pathname, terms]);
+
 
   // sürükle bırak işlemi
   const handleMouseDown = (e, itemId) => {
@@ -632,8 +642,8 @@ export default function Dictionary() {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0;
-  pointer-events: none; /* Arka plana tıklamayı engellemez */
+  z-index: 50;
+  pointer-events: none; 
   overflow: hidden;
 }
 
@@ -641,7 +651,7 @@ export default function Dictionary() {
   position: absolute;
   color: rgba(68, 60, 52, 0.8);
   font-weight: 800;
-  font-size: 1.1rem; /* Biraz daha dengeli bir boyut */
+  font-size: 1.1rem; 
   white-space: nowrap;
   padding: 8px 16px;
   border-radius: 20px;
@@ -650,7 +660,7 @@ export default function Dictionary() {
   border: 1px solid rgba(196, 139, 100, 0.3);
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   cursor: grab;
-  pointer-events: auto; /* Sadece kelimeler tutulabilir olsun */
+  pointer-events: auto; 
   user-select: none;
   z-index: 2;
 }
