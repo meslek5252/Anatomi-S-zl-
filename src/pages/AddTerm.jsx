@@ -6,7 +6,7 @@ export default function AddTerm() {
   const [term, setTerm] = useState('');
 
   const executeAdd = () => {
-    if (pass === "admin123") {
+    if (pass === "atamtal1923") {
       addTerm(term);
       alert("Kelime başarıyla eklendi!");
     } else { alert("Hatalı Şifre!"); }

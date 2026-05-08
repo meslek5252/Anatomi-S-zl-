@@ -1,5 +1,5 @@
 import React from 'react';
-const TR = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ".split("");
+const TR = "ABCÇDEFGHIİJKLMNOÖPQRSŞTUÜVWXYZ".split("");
 
 export default function LetterMenu({ activeLetter, setActiveLetter }) {
   return (
