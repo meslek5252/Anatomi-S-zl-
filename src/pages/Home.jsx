@@ -26,7 +26,7 @@ export default function Home() {
           </h1>
           
           <p style={{ color: '#4b5563', marginBottom: '30px', fontSize: '18px', fontWeight: '500' }}>
-            Sağlık & Tıbbi Terimler Sözlüğü Tubitak 4006A kapsamında Miraç Arda BAYRAK tarafından yapılmıştır.
+            Sağlık & Tıbbi Terimler Sözlüğü Tubitak 4006 A kapsamında Miraç Arda BAYRAK tarafından yapılmıştır.
           </p>
           
           {/* Buton Bölümü */}
