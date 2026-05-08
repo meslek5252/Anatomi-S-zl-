@@ -340,7 +340,7 @@ export default function Dictionary() {
     }
   };
 
-  const ALPHABET = "ABCÇDEFGHIİJKLMNOÖPRSŞTUÜWQVYZ".split("");
+  const ALPHABET = "ABCÇDEFGHIİJKLMNOÖPQRSŞTUÜVWXYZ".split("");
   
   const filtered = terms.filter(t => {
     if (!t || typeof t !== 'object') return false;
